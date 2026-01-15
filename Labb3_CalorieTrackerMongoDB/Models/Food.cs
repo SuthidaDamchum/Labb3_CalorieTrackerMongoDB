@@ -7,14 +7,16 @@ namespace Labb3_CalorieTrackerMongoDB.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-
         public string Name { get; set; }
-
         public int Calories { get; set; }
         public int Protein { get; set; }
         public int Carbs { get; set; }
-
         public int Fat { get; set; }
+
+        public DateTime Time { get; set; } 
+
+
+
 
     }
 
