@@ -6,7 +6,33 @@
         xmlns:local="clr-namespace:Labb3_CalorieTrackerMongoDB"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
 
-    </Grid>
+    <DockPanel>
+
+    
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#2D2D30" Height="50">
+
+            <TextBlock Text="Calorie Tracker" 
+                       Foreground="White" FontSize="18" FontWeight="Bold" 
+                       VerticalAlignment="Center" Margin="10"/>
+
+            <Button Content="Today's Log" 
+                    Margin="10,5"
+                    Width="120"
+                    Command=""/>
+
+            <Button Content="Food List" 
+                    Margin="10,5"
+                    Width="120"
+                   Command=""/>
+
+            <Button Content="Weekly Summary" 
+                    Margin="10,5"
+                    Width="140"
+                    Command=""/>
+        </StackPanel>
+
+       
+        <ContentControl x:Name="MainContent" Background="#F5F5F5"/>
+    </DockPanel>
 </Window>
