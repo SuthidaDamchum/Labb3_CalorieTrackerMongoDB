@@ -2,8 +2,26 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Labb3_CalorieTrackerMongoDB"
+             xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
+             xmlns:views="clr-namespace:Labb3_CalorieTrackerMongoDB.Views"
              StartupUri="MainWindow.xaml">
+
     <Application.Resources>
-         
+
+        <!-- När CurrentView är av typ DailyLogViewModel visas DailyLogView -->
+        <DataTemplate DataType="{x:Type viewmodels:DailyLogViewModel}">
+            <views:DailyLogView/>
+        </DataTemplate>
+
+        <!-- När CurrentView är av typ FoodViewModel visas FoodView -->
+        <DataTemplate DataType="{x:Type viewmodels:FoodViewModel}">
+            <views:FoodView/>
+        </DataTemplate>
+
+        <!-- När CurrentView är av typ WeeklySummaryViewModel visas WeeklySummaryView -->
+        <DataTemplate DataType="{x:Type viewmodels:WeeklySummaryViewModel}">
+            <views:WeeklySummaryView/>
+        </DataTemplate>
+
     </Application.Resources>
 </Application>

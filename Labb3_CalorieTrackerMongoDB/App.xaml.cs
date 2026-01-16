@@ -9,6 +9,7 @@ namespace Labb3_CalorieTrackerMongoDB
     /// </summary>
     public partial class App : Application
     {
-    }
+     
 
+    }
 }
