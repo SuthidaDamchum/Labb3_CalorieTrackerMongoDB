@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Labb3_CalorieTrackerMongoDB.Models;
+using MongoDB.Driver;
 
 namespace Labb3_CalorieTrackerMongoDB.Models
 {
@@ -12,8 +13,9 @@ namespace Labb3_CalorieTrackerMongoDB.Models
             var client = new MongoClient("mongodb://localhost:27017");
             _database = client.GetDatabase("SuthidaDamchum"); // Din databas
         }
-
         public IMongoCollection<Food> Foods => _database.GetCollection<Food>("food");
         public IMongoCollection<DailyLog> DailyLogs => _database.GetCollection<DailyLog>("dailylogs");
     }
 }
+
+

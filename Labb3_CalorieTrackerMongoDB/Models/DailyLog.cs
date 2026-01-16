@@ -14,16 +14,11 @@ namespace Labb3_CalorieTrackerMongoDB.Models
         [BsonId]
         public ObjectId Id { get; set; }
         public DateTime Date { get; set; }
-
-        public List<Meal> Meals { get; set; } = new List<Meal>();
-
         public int TotalCalories { get; set; }
-
         public int TotalProtein { get; set; }
-
         public int TotalCarbs { get; set; }
-
         public int TotalFat { get; set; }
+        public List<Food> Foods { get; set; } 
     }
 
 }
