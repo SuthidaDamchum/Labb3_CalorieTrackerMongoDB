@@ -78,9 +78,11 @@
            
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                 <Button Content="Cancel" Width="90" Height="36" Command="{Binding CancelCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                         Background="#E0F2F1" Foreground="#2E7D32" FontWeight="SemiBold" 
                         BorderBrush="#A5D6A7" BorderThickness="1"/>
                 <Button Content="Save" Width="90" Height="36" Command="{Binding SaveCommand}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                         Background="#2E7D32" Foreground="White" FontWeight="Bold" Margin="10,0,0,0"/>
             </StackPanel>
         </Grid>

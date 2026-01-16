@@ -16,10 +16,12 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
         public Food FoodItem { get; set; }
 
-        public ICommand SaveCommand { get; }
-        public ICommand CancleCommand { get; }
+        public ICommand SaveCommand { get; } 
+        public ICommand CancelCommand { get; }
 
         public bool IsEditMode => FoodItem?.Id != ObjectId.Empty;
+
+
 
         public FoodDialogViewModel(MongoService mongoService, Food? food = null)
         {
@@ -27,8 +29,10 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             FoodItem = food ?? new Food();
 
+            SaveCommand = new AsyncDelegateCommand(SaveAsync);
+            CancelCommand = new AsyncDelegateCommand(CancelAsync);
 
-           
+
         }
 
         private async Task SaveAsync(object? obj)
@@ -47,9 +51,12 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             if (obj is Window window) window.Close();
         }
 
-        private async Task Cancle(object? obj)
+        private Task CancelAsync(object? obj)
         {
-            if (obj is Window window) window.Close();
+            if (obj is Window window)
+                window.Close();
+
+            return Task.CompletedTask;
         }
     }
 }
