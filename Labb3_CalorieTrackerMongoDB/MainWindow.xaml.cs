@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Labb3_CalorieTrackerMongoDB.Models;
 using Labb3_CalorieTrackerMongoDB.ViewModels;
 using MongoDB.Driver;
 
@@ -12,10 +13,12 @@ namespace Labb3_CalorieTrackerMongoDB
         public MainWindow()
         {
             InitializeComponent();
+            var mongoService = new MongoService();
+            var dailyLogVM = new DailyLogViewModel(mongoService);
 
-            this.DataContext = new MainWindowViewModel();
+            DailyLogViewControl.DataContext = dailyLogVM;
         }
     }
 
-}
+}   
 
