@@ -16,6 +16,8 @@ namespace Labb3_CalorieTrackerMongoDB.Models
         public int Carbs { get; set; }
         public int Fat { get; set; }
 
-        public string Result => ActualCalories <= GoalCalories ? "✅" : "⚠️";
+        public string CaloriesStatus => ActualCalories <= 1500 ? "✅" : "⚠️";
+        public string ProteinStatus => Protein <= 100 ? "✅" : "⚠️";
+        public string Result => CaloriesStatus == "✅" && ProteinStatus == "✅" ? "✅" : "⚠️";
     }
 }
