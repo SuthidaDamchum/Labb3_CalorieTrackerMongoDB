@@ -19,11 +19,12 @@
 
             <DataGrid x:Name="FoodListGrid"
                       ItemsSource="{Binding Foods}"
+                      SelectedItem="{Binding SelectedFood}"
+                      SelectionMode="Single"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       Grid.Row="0"
                       Margin="0 0 0 10"
-                      SelectionMode="Single"
                       RowBackground="#F1F8F1"
                       AlternatingRowBackground="White"
                       GridLinesVisibility="None"
@@ -47,14 +48,17 @@
                         Background="#A5D6A7" Foreground="#2E7D32" FontWeight="SemiBold" 
                         BorderBrush="#81C784" BorderThickness="1"/>
                 <Button Content="Update Food" Width="100" Height="32" Margin="5"
-                        Command="{Binding UpdateFoodCommand}" 
+                        Command="{Binding  UpdateFoodCommand}" 
+                        CommandParameter="{Binding SelectedFood}"
                         Background="#81C784" Foreground="White" FontWeight="Bold"
                         BorderBrush="#66BB6A" BorderThickness="1"/>
                 <Button Content="Delete Food" Width="100" Height="32" Margin="5"
-                        Command="{Binding DeleteFoodCommand}" 
+                        Command="{Binding DeleteCommand}" 
+                         CommandParameter="{Binding SelectedFood}"
                         Background="#EF9A9A" Foreground="White" FontWeight="Bold"
                         BorderBrush="#E57373" BorderThickness="1"/>
             </StackPanel>
         </Grid>
     </Border>
 </UserControl>
+
