@@ -5,60 +5,189 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Background="#F5F9F4"
+             d:DesignHeight="500" d:DesignWidth="900" 
              d:DataContext="{d:DesignInstance Type=viewmodels:FoodViewModel, IsDesignTimeCreatable=False}">
 
-    <Border Padding="20" CornerRadius="12" Background="White" BorderBrush="#C1E1C1" BorderThickness="2">
-        <Grid>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
+        <SolidColorBrush x:Key="MatchaPrimaryDark" Color="#5F6B3A"/>
+        <SolidColorBrush x:Key="VanillaBackground" Color="#F8EFDA"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BorderBrushVanilla" Color="#D8D1B8"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#3F4A2C"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#8A8F75"/>
+
+        <Style x:Key="MatchaButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource MatchaPrimary}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="18">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="8,0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatchaPrimaryDark}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#C9CFB2"/>
+                    <Setter Property="Foreground" Value="#F5F5F5"/>
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+   
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#E1E6C9"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="#FAF7EE"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Style.Triggers>
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#F3EFDF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#D6E1B4"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+  
+    <Grid Background="{StaticResource VanillaBackground}">
+        <Grid Margin="32">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-
-            <DataGrid x:Name="FoodListGrid"
-                      ItemsSource="{Binding Foods}"
-                      SelectedItem="{Binding SelectedFood}"
-                      SelectionMode="Single"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      Grid.Row="0"
-                      Margin="0 0 0 10"
-                      RowBackground="#F1F8F1"
-                      AlternatingRowBackground="White"
-                      GridLinesVisibility="None"
-                      HeadersVisibility="Column"
-                      BorderThickness="0"
-                      FontSize="14"
-                      FontWeight="SemiBold">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="Protein" Binding="{Binding Protein}" Width="80"/>
-                    <DataGridTextColumn Header="Carbs" Binding="{Binding Carbs}" Width="80"/>
-                    <DataGridTextColumn Header="Fat" Binding="{Binding Fat}" Width="80"/>
-                    <DataGridTextColumn Header="Calories" Binding="{Binding Calories}" Width="100"/>
-                </DataGrid.Columns>
-            </DataGrid>
-
-
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Add Food" Width="100" Height="32" Margin="5"
-                        Command="{Binding AddFoodCommand}" 
-                        Background="#A5D6A7" Foreground="#2E7D32" FontWeight="SemiBold" 
-                        BorderBrush="#81C784" BorderThickness="1"/>
-                <Button Content="Update Food" Width="100" Height="32" Margin="5"
-                        Command="{Binding  UpdateFoodCommand}" 
-                        CommandParameter="{Binding SelectedFood}"
-                        Background="#81C784" Foreground="White" FontWeight="Bold"
-                        BorderBrush="#66BB6A" BorderThickness="1"/>
-                <Button Content="Delete Food" Width="100" Height="32" Margin="5"
-                        Command="{Binding DeleteCommand}" 
-                         CommandParameter="{Binding SelectedFood}"
-                        Background="#EF9A9A" Foreground="White" FontWeight="Bold"
-                        BorderBrush="#E57373" BorderThickness="1"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Food Library"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource MatchaPrimary}"/>
+                    <TextBlock Text="Manage your foods and quickly add them to today's log."
+                               FontSize="13"
+                               Foreground="{StaticResource TextMuted}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
             </StackPanel>
-        </Grid>
-    </Border>
-</UserControl>
 
+      
+            <Border Grid.Row="1"
+                    Background="{StaticResource CardBackground}"
+                    CornerRadius="18"
+                    BorderBrush="{StaticResource BorderBrushVanilla}"
+                    BorderThickness="1"
+                    Padding="18"
+                    SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid Grid.Row="0"
+                              ItemsSource="{Binding Foods}"
+                              SelectedItem="{Binding SelectedFood}"
+                              SelectionMode="Single"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              Margin="0,0,0,8"
+                              GridLinesVisibility="None"
+                              HeadersVisibility="Column"
+                              BorderThickness="0"
+                              AlternationCount="2">
+                        <DataGrid.Columns>
+                          
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                            <DataGridTextColumn Header="Amount" Binding="{Binding Amount}"  Width="60" />
+                            <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="80"/>
+                            <DataGridTextColumn Header="Protein" Binding="{Binding Protein}" Width="90"/>
+                            <DataGridTextColumn Header="Carbs" Binding="{Binding Carbs}" Width="90"/>
+                            <DataGridTextColumn Header="Fat" Binding="{Binding Fat}" Width="90"/>
+                            <DataGridTextColumn Header="Total Calories" Binding="{Binding Calories}" Width="70"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                  
+                    <Grid Grid.Row="1" Margin="0,18,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Style="{StaticResource MatchaButtonStyle}"
+                                Command="{Binding AddToTodayCommand}"
+                                CommandParameter="{Binding SelectedFood}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock FontFamily="Segoe MDL2 Assets"
+                                           Text="&#xE710;" FontSize="18"
+                                           Margin="0,0,8,0" />
+                                <TextBlock Text="Add to Today" FontWeight="Bold" FontSize="15"/>
+                            </StackPanel>
+                        </Button>
+
+          
+                        <StackPanel Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,0,0">
+                            <Button Style="{StaticResource MatchaButtonStyle}" 
+                                    Content="Add Food"
+                                    Command="{Binding AddFoodCommand}" />
+
+                            <Button Style="{StaticResource MatchaButtonStyle}" 
+                                    Content="Update Food"
+                                    Command="{Binding UpdateFoodCommand}"
+                                    CommandParameter="{Binding SelectedFood}" />
+
+                            <Button Style="{StaticResource MatchaButtonStyle}" 
+                                    Content="Delete Food"
+                                    Command="{Binding DeleteCommand}"
+                                    CommandParameter="{Binding SelectedFood}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <TextBlock Grid.Row="2"
+                       Text="Tip: Edit foods in the list to keep your nutrition data accurate."
+                       FontSize="11"
+                       Foreground="{StaticResource TextMuted}"
+                       Margin="2,10,0,0"/>
+        </Grid>
+    </Grid>
+</UserControl>
