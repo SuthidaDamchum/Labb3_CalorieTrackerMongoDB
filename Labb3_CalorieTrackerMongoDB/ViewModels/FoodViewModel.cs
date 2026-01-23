@@ -39,10 +39,10 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             _todaysLogVM = todaysLogVM;
 
             _mongoService = mongoService;
-     
+
 
             DeleteCommand = new AsyncDelegateCommand(
-               _ =>  DeleteAsync(),
+               _ => DeleteAsync(),
                  _ => SelectedFood != null
              );
 
@@ -59,7 +59,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                 food => AddSelectedFoodToToday(),
                 _ => SelectedFood != null
 );
-               
+
             // Correct way to load foods at startup (fire and forget)
             Task.Run(() => LoadFoodsAsync());
         }
@@ -106,12 +106,12 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             if (SelectedFood == null)
                 return;
 
-            _todaysLogVM.AddFoodFromList(
+            _todaysLogVM.AddFoodFromListAsync(
                 SelectedFood,
                 SelectedFood.Amount
         );
 
-         
+
         }
     }
 }

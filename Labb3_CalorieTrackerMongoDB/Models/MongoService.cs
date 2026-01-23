@@ -20,33 +20,164 @@ namespace Labb3_CalorieTrackerMongoDB.Models
 
 
 
-        //public async Task MigrateFoodsAsync(MongoService mongo)
+        //public async Task InsertDailyLogAsync(DailyLog dailyLog)
         //{
-        //    // Add defaults only to documents that don't have Unit yet
-        //    var filter = Builders<Food>.Filter.Exists("Unit", false);
-
-        //    var update = Builders<Food>.Update
-        //        .Set("Unit", Unit.g.ToString())
-        //        .Set("Amount", 100)
-
-
-        //    await mongo.Foods.UpdateManyAsync(filter, update);
+        //    await DailyLogs.InsertOneAsync(dailyLog);
         //}
 
-        public async Task InsertDailyLogAsync(DailyLog dailyLog)
+
+        public Task<DailyLog?> GetDailyLogByDateAsync(DateTime date)
         {
-            await DailyLogs.InsertOneAsync(dailyLog);
+            var day = date.Date;
+            return DailyLogs.Find(d => d.Date == day).FirstOrDefaultAsync();
         }
 
-        public async Task AddItemToDailyLogAsync(ObjectId dailyLogId, DailyLogItem item)
+
+        public async Task<DailyLog> GetOrCreateTodayLogAsync(DateTime date)
+        {
+            var day = date.Date;
+
+            var existing = await DailyLogs
+                .Find(d => d.Date == day)
+                .FirstOrDefaultAsync();
+
+
+            if (existing != null)
+                return existing;
+
+            var newLog = new DailyLog
+            {
+                Date = day,
+                Items = new List<DailyLogItem>(),
+                TotalCalories = 0,
+                TotalProtein = 0,
+                TotalCarbs = 0,
+                TotalFat = 0
+            };
+
+            await DailyLogs.InsertOneAsync(newLog);
+            return newLog;
+        }
+
+        public Task AddItemToDailyLogAsync(ObjectId dailyLogId, DailyLogItem item)
         {
             var filter = Builders<DailyLog>.Filter.Eq(d => d.Id, dailyLogId);
-            var update = Builders<DailyLog>.Update.Push(d => d.Items, item);
+
+            var update = Builders<DailyLog>.Update
+                .Push(d => d.Items, item)
+                .Inc(d => d.TotalCalories, item.Calories)
+                 .Inc(d => d.TotalProtein, (int)Math.Round(item.Protein))
+                .Inc(d => d.TotalCarbs, (int)Math.Round(item.Carbs))
+                .Inc(d => d.TotalFat, (int)Math.Round(item.Fat));
+
+            return DailyLogs.UpdateOneAsync(filter, update);
+        }
+
+        public async Task RemoveItemFromDailyLogAsync(ObjectId dailyLogId, DailyLogItem item)
+        {
+            var filter = Builders<DailyLog>.Filter.Eq(log => log.Id, dailyLogId);
+            var update = Builders<DailyLog>.Update.PullFilter(
+                log => log.Items,
+                i => i.FoodId == item.FoodId && i.Time == item.Time
+            );
             await DailyLogs.UpdateOneAsync(filter, update);
         }
+
+
+
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
