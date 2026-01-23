@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Labb3_CalorieTrackerMongoDB.Models
 {
-    public class User
+    public enum Unit
     {
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
+        g,
+        ml,
+        pcs
     }
 }
-
