@@ -13,17 +13,13 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
     public class WeeklySummaryViewModel : ViewModelBase
     {
         private readonly MongoService _mongoService;
-
         public ObservableCollection<DailyLogSummary> WeeklyLogs { get; set; } = new();
-
         public ICommand LoadWeeklyLogsCommand { get; }
-
         public WeeklySummaryViewModel(MongoService mongoService)
         {
             _mongoService = mongoService;
             LoadWeeklyLogsCommand = new AsyncDelegateCommand(_ => LoadWeeklyLogsAsync());
 
-            // Load automatically
             _ = LoadWeeklyLogsAsync();
         }
 
@@ -51,9 +47,8 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                 });
             }
         }
-
         public string WeekRange
             => $"Week: {CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstDay, DayOfWeek.Monday)} " +
-               $"({WeeklyLogs.FirstOrDefault()?.Date:yyyy-MM-dd} → {WeeklyLogs.LastOrDefault()?.Date:yyyy-MM-dd})";
+            $"({WeeklyLogs.FirstOrDefault()?.Date:yyyy-MM-dd} → {WeeklyLogs.LastOrDefault()?.Date:yyyy-MM-dd})";
     }
 }

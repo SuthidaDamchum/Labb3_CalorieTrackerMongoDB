@@ -7,18 +7,18 @@
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
+        
 
-        <!-- När CurrentView är av typ DailyLogViewModel visas DailyLogView -->
+
+
         <DataTemplate DataType="{x:Type viewmodels:DailyLogViewModel}">
             <views:DailyLogView/>
         </DataTemplate>
 
-        <!-- När CurrentView är av typ FoodViewModel visas FoodView -->
         <DataTemplate DataType="{x:Type viewmodels:FoodViewModel}">
             <views:FoodView/>
         </DataTemplate>
 
-        <!-- När CurrentView är av typ WeeklySummaryViewModel visas WeeklySummaryView -->
         <DataTemplate DataType="{x:Type viewmodels:WeeklySummaryViewModel}">
             <views:WeeklySummaryView/>
         </DataTemplate>

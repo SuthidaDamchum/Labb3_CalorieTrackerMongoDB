@@ -13,15 +13,10 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
     class FoodDialogViewModel : ViewModelBase
     {
         private readonly MongoService _mongoService;
-
         public Food FoodItem { get; set; }
-
-        public ICommand SaveCommand { get; } 
+        public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
-
         public bool IsEditMode => FoodItem?.Id != ObjectId.Empty;
-
-
 
         public FoodDialogViewModel(MongoService mongoService, Food? food = null)
         {
@@ -31,10 +26,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             SaveCommand = new AsyncDelegateCommand(SaveAsync);
             CancelCommand = new AsyncDelegateCommand(CancelAsync);
-
-
         }
-
         private async Task SaveAsync(object? obj)
         {
             if (IsEditMode)
@@ -58,5 +50,9 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             return Task.CompletedTask;
         }
+
     }
 }
+
+
+

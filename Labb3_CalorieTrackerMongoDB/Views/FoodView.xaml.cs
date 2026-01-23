@@ -10,7 +10,6 @@ namespace Labb3_CalorieTrackerMongoDB.Views
         public FoodView()
         {
             InitializeComponent();
-
         }
     }
 }

@@ -3,38 +3,81 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Labb3_CalorieTrackerMongoDB.Views"
              xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" 
-            d:DataContext="{d:DesignInstance Type=viewmodels:WeeklySummaryViewModel, IsDesignTimeCreatable=False}">
+             d:DesignHeight="450" d:DesignWidth="900"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             d:DataContext="{d:DesignInstance Type=viewmodels:WeeklySummaryViewModel, IsDesignTimeCreatable=False}">
 
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F8EFDA"/>
+        <SolidColorBrush x:Key="HeaderBrush" Color="#7A8450"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#3F4A2C"/>
+        <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#D8D1B8"/>
+    </UserControl.Resources>
 
-    <Grid Margin="10">
+    <Grid Background="{StaticResource BackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
-   
-        <StackPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock Text="Weekly Statistics" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding WeekRange}" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
-            <TextBlock Text="Prot: Protein, Carb: Carbohydrates, Fat: Fat, Kcal: Calories" FontSize="12" HorizontalAlignment="Center"/>
-            <TextBlock Text="Result: ✅ = Goal met or under, ⚠️ = Exceeded goal" FontSize="12" FontStyle="Italic" HorizontalAlignment="Center"/>
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,20,0,16">
+            <TextBlock Text="Weekly Statistics" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       Foreground="{StaticResource HeaderBrush}" 
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding WeekRange}" 
+                       FontSize="14" 
+                       Foreground="{StaticResource TextBrush}" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,4,0,0"/>
+            <TextBlock Text="Prot: Protein, Carb: Carbohydrates, Fat: Fat, Kcal: Calories" 
+                       FontSize="12" 
+                       Foreground="{StaticResource TextBrush}" 
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Result: ✅ = Goal met or under, ⚠️ = Exceeded goal" 
+                       FontSize="12" 
+                       FontStyle="Italic" 
+                       Foreground="{StaticResource TextBrush}" 
+                       HorizontalAlignment="Center"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding WeeklyLogs}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="100"/>
-                <DataGridTextColumn Header="Goal Kcal" Binding="{Binding GoalCalories}" Width="80"/>
-                <DataGridTextColumn Header="Actual Kcal" Binding="{Binding ActualCalories}" Width="100"/>
-                <DataGridTextColumn Header="Prot" Binding="{Binding Protein}" Width="80"/>
-                <DataGridTextColumn Header="Carb" Binding="{Binding Carbs}" Width="80"/>
-                <DataGridTextColumn Header="Fat" Binding="{Binding Fat}" Width="80"/>
-                <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="80"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- DataGrid Card -->
+        <Border Grid.Row="1"
+                Background="{StaticResource CardBrush}"
+                CornerRadius="18"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="1"
+                Padding="16"
+                Margin="32"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                SnapsToDevicePixels="True">
+            <DataGrid ItemsSource="{Binding WeeklyLogs}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      AlternationCount="2"
+                      GridLinesVisibility="None"
+                      BorderThickness="0"
+                      HeadersVisibility="Column"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="110"/>
+                    <DataGridTextColumn Header="Goal Kcal" Binding="{Binding GoalCalories}" Width="90"/>
+                    <DataGridTextColumn Header="Actual Kcal" Binding="{Binding ActualCalories}" Width="110"/>
+                    <DataGridTextColumn Header="Prot" Binding="{Binding Protein}" Width="80"/>
+                    <DataGridTextColumn Header="Carb" Binding="{Binding Carbs}" Width="80"/>
+                    <DataGridTextColumn Header="Fat" Binding="{Binding Fat}" Width="80"/>
+                    <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="80"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
     </Grid>
 </UserControl>

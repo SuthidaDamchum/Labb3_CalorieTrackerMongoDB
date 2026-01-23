@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using Labb3_CalorieTrackerMongoDB.Models;
 
 namespace Labb3_CalorieTrackerMongoDB
 {
@@ -9,7 +10,8 @@ namespace Labb3_CalorieTrackerMongoDB
     /// </summary>
     public partial class App : Application
     {
-     
+
+      
 
     }
 }
