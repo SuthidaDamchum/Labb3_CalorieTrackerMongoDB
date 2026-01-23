@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=viewmodels:DailyLogViewModel, IsDesignTimeCreatable=False}">
+             d:DesignHeight="450" d:DesignWidth="800" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:DailyLogViewModel, IsDesignTimeCreatable=True}">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -17,12 +17,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-     
+
         <TextBlock Grid.Row="0" Text="{Binding TodayDate, StringFormat='Date: {0:d}'}"
                    FontSize="16" FontWeight="Bold"
                    Margin="0,0,0,10"/>
 
-        
+
         <Border Grid.Row="1" Background="#EEE" Padding="10" CornerRadius="8" Margin="0,0,0,10">
             <StackPanel>
                 <TextBlock Text="Daily Goals" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
@@ -39,11 +39,13 @@
             </StackPanel>
         </Border>
 
-      
-        <DataGrid Grid.Row="2" ItemsSource="{Binding TodaysFood}"
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding TodaysItems}"
                   AutoGenerateColumns="False" Margin="0,0,0,10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Food" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="80"/>
+                <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="80"/>
                 <DataGridTextColumn Header="Protein" Binding="{Binding Protein}" Width="80"/>
                 <DataGridTextColumn Header="Carbs" Binding="{Binding Carbs}" Width="80"/>
                 <DataGridTextColumn Header="Fat" Binding="{Binding Fat}" Width="80"/>
@@ -51,9 +53,10 @@
             </DataGrid.Columns>
         </DataGrid>
 
-     
+
         <Border Grid.Row="3" Background="#F5F5F5" Padding="10" CornerRadius="8" Margin="0,0,0,10">
             <WrapPanel HorizontalAlignment="Right">
+                
                 <TextBlock Text="Total Calories:" FontWeight="SemiBold"/>
                 <TextBlock Text="{Binding TotalCalories}" Margin="5,0,15,0"/>
                 <TextBlock Text="Protein:" FontWeight="SemiBold"/>
@@ -64,9 +67,20 @@
                 <TextBlock Text="{Binding TotalFat}"/>
             </WrapPanel>
         </Border>
-
-        <Button Grid.Row="4" Content="Save Day" 
-                Command="{Binding SaveDayCommand}" 
-                HorizontalAlignment="Right" Width="120"/>
+        
+        
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,0">
+            <Button Content="Save" 
+                    Command="{Binding SaveDayCommand}" 
+                    CommandParameter="{Binding DataContext.SelectedFood, RelativeSource={RelativeSource AncestorType=UserControl} }"
+                    Width="120"
+                    Margin="0,0,10,0"/>
+            <Button Content="Delete" 
+                    Command="{Binding DeleteDayCommand}" 
+                    Width="120"/>
+        </StackPanel>
     </Grid>
 </UserControl>
