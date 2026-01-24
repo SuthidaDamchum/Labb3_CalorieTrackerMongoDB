@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Labb3_CalorieTrackerMongoDB.Models;
+using Labb3_CalorieTrackerMongoDB.ViewModels;
 
 namespace Labb3_CalorieTrackerMongoDB.Views
 {
@@ -23,6 +25,7 @@ namespace Labb3_CalorieTrackerMongoDB.Views
         public DailyLogView()
         {
             InitializeComponent();
+          
         }
     }
 }

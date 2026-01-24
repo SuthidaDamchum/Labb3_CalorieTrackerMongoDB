@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Runtime.Versioning;
+using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -15,11 +17,24 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         public ObservableCollection<DailyLogItem> TodaysItems { get; } = new();
 
         private readonly MongoService _mongoService;
+        public DateTime TodayDate => DailyLog?.Date ?? DateTime.Today;
 
-        private ObjectId _todayLogId = ObjectId.Empty;
-
-        public DateTime TodayDate => DateTime.Today; 
         public ICommand DeleteItemCommand { get; }
+
+        public ICommand LoadLogForDateCommand { get; }
+
+        private DateTime _selectedDated = DateTime.Today;
+        public DateTime SelectedDate
+        {
+            get => _selectedDated;
+            set
+            {
+                _selectedDated = value;
+                RaisePropertyChanged();
+                _ = LoadLogForDateAsync();
+
+            }
+        }
 
         private DailyLogItem? _selectedItem;
         public DailyLogItem? SelectedItem
@@ -33,6 +48,18 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
          
             }
         }
+        private DailyLog _dailyLog;
+        public DailyLog DailyLog
+        {
+            get => _dailyLog;
+
+            set
+            {
+                _dailyLog = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(TodayDate));
+            }
+        }
 
         public int GoalCalories => 1500;
         public int GoalProtein => 100;
@@ -44,11 +71,9 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         public int TotalProtein => (int)Math.Round(TodaysItems.Sum(f => f.Protein));
         public int TotalCarbs => (int)Math.Round(TodaysItems.Sum(f => f.Carbs));
         public int TotalFat => (int)Math.Round(TodaysItems.Sum(f => f.Fat));
-
         public DailyLogViewModel(MongoService mongoService)
         {
             _mongoService = mongoService;
-
 
             TodaysItems.CollectionChanged += (s, e) =>
             {
@@ -56,71 +81,125 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                 RaisePropertyChanged(nameof(TotalProtein));
                 RaisePropertyChanged(nameof(TotalCarbs));
                 RaisePropertyChanged(nameof(TotalFat));
-             
             };
             _ = LoadTodayAsync();
 
-
-
             DeleteItemCommand = new AsyncDelegateCommand(
-    param => DeleteItemAsync(param as DailyLogItem),
-    param => param is DailyLogItem
-);
+            param => DeleteItemAsync(param as DailyLogItem),
+            param => param is DailyLogItem
 
+            );
+
+            LoadLogForDateCommand = new AsyncDelegateCommand(_ => LoadLogForDateAsync());
         }
 
-        private async Task EnsureTodayLogIdAsync()
+
+
+        private async Task EnsureTodayLogExistsAsync()
         {
-            if (_todayLogId != ObjectId.Empty)
+            if (DailyLog != null && DailyLog.Id != ObjectId.Empty)
                 return;
 
-            var log = await _mongoService.GetOrCreateTodayLogAsync(DateTime.Today);
-            _todayLogId = log.Id;
+            var todayDate = DateTime.Today.Date;
+
+ 
+            DailyLog = await _mongoService.GetOrCreateTodayLogAsync(todayDate);
+
         }
 
         private async Task LoadTodayAsync()
         {
-            var dailyLog = await _mongoService.GetDailyLogByDateAsync(DateTime.Today);
+            var todayDate = DateTime.Today.Date;
+            var dailyLog = await _mongoService.GetDailyLogByDateAsync(todayDate);
+
             TodaysItems.Clear();
             if (dailyLog != null && dailyLog.Items != null)
             {
+                DailyLog = dailyLog;
                 foreach (var item in dailyLog.Items)
                 {
                     TodaysItems.Add(item);
                 }
+            }
+            else
+            {
+                // ✅ så binding alltid har något
+                DailyLog = new DailyLog { Date = todayDate, Items = new List<DailyLogItem>() };
+            }
+
+            RaisePropertyChanged(nameof(TotalCalories));
+            RaisePropertyChanged(nameof(TotalProtein));
+            RaisePropertyChanged(nameof(TotalCarbs));
+            RaisePropertyChanged(nameof(TotalFat));
+        }
+
+
+        private async Task LoadLogForDateAsync()
+        {
+            var selectedDate = SelectedDate.Date;
+
+            var log = await _mongoService.GetDailyLogByDateAsync(selectedDate);
+
+            TodaysItems.Clear();
+            if (log != null && log.Items != null)
+            {
+                DailyLog = log;
+                foreach (var item in log.Items)
+                    TodaysItems.Add(item);
+            }
+            else
+            {
+                DailyLog = new DailyLog { Date = selectedDate, Items = new List<DailyLogItem>() };
+            }
+            RaisePropertyChanged(nameof(TotalCalories));
+            RaisePropertyChanged(nameof(TotalProtein));
+            RaisePropertyChanged(nameof(TotalCarbs));
+            RaisePropertyChanged(nameof(TotalFat));
+        }
+
+
+        public async Task AddFoodFromListAsync(Food f, double ConsumedAmount)
+        {
+            await EnsureTodayLogExistsAsync();
+
+            var factor = ConsumedAmount / f.Amount;
+            var existingItem = TodaysItems.FirstOrDefault(i => i.FoodId == f.Id);
+
+            if (existingItem != null)
+            {
+                existingItem.Amount += ConsumedAmount;
+                existingItem.Calories += (int)Math.Round(factor * f.Calories);
+                existingItem.Protein += factor * f.Protein;
+                existingItem.Carbs += factor * f.Carbs;
+                existingItem.Fat += factor * f.Fat;
+                existingItem.Time = DateTime.Now;
+
+                await _mongoService.UpdateItemInDailyLogAsync(DailyLog.Id, existingItem);
                 RaisePropertyChanged(nameof(TotalCalories));
                 RaisePropertyChanged(nameof(TotalProtein));
                 RaisePropertyChanged(nameof(TotalCarbs));
                 RaisePropertyChanged(nameof(TotalFat));
             }
-        }
-
-        public async Task AddFoodFromListAsync(Food f, double ConsumedAmount)
-        {
-
-            await EnsureTodayLogIdAsync();
-
-            var factor = ConsumedAmount / f.Amount;
-
-            var item = new DailyLogItem
+            else
             {
-                FoodId = f.Id,
-                Name = f.Name,
+                var item = new DailyLogItem
+                {
+                    FoodId = f.Id,
+                    Name = f.Name,
 
-                Unit = f.Unit,
-                Amount = ConsumedAmount,
-                Calories = (int)Math.Round(factor * f.Calories),
-                Protein = factor * f.Protein,
-                Carbs = factor * f.Carbs,
-                Fat = factor * f.Fat,
+                    Unit = f.Unit,
+                    Amount = ConsumedAmount,
+                    Calories = (int)Math.Round(factor * f.Calories),
+                    Protein = factor * f.Protein,
+                    Carbs = factor * f.Carbs,
+                    Fat = factor * f.Fat,
+                    Time = DateTime.Now
+                };
 
-                Time = DateTime.Now
-            };
-
-            TodaysItems.Add(item);
-            await _mongoService.AddItemToDailyLogAsync(_todayLogId, item);
+                TodaysItems.Add(item);
+                await _mongoService.AddItemToDailyLogAsync(DailyLog.Id, item);
+            }
         }
-
         private async Task DeleteItemAsync(DailyLogItem? item)
         {
             if (item == null)
@@ -140,15 +219,12 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                 return;
 
             // Remove from MongoDB
-            await _mongoService.RemoveItemFromDailyLogAsync(_todayLogId, itemToRemove);
+            await _mongoService.RemoveItemFromDailyLogAsync(DailyLog.Id, itemToRemove);
 
             // Remove from local collection
             TodaysItems.Remove(itemToRemove);
             SelectedItem = null;
         }
-
-
-
         //public async Task AddFoodToExistingDailyLogAsync(ObjectId dailyLogId, Food food, double amount)
         //{
         //    var factor = amount / food.Amount;
@@ -168,13 +244,5 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         //    await _mongoService.AddItemToDailyLogAsync(dailyLogId, newItem);
         //}
     }
-
 }
-
-
-
-
-
-
-
 

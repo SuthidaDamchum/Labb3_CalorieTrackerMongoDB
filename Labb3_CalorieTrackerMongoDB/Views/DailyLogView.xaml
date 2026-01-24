@@ -11,19 +11,34 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Title -->
             <RowDefinition Height="Auto"/>
+            <!-- DatePicker -->
+            <RowDefinition Height="Auto"/>
+            <!-- Goals -->
             <RowDefinition Height="*"/>
+            <!-- DataGrid -->
             <RowDefinition Height="Auto"/>
+            <!-- Totals -->
             <RowDefinition Height="Auto"/>
+            <!-- Buttons -->
         </Grid.RowDefinitions>
 
-
-        <TextBlock Grid.Row="0" Text="{Binding TodayDate, StringFormat='Date: {0:d}'}"
-                   FontSize="16" FontWeight="Bold"
+        <!-- Title -->
+        <TextBlock Grid.Row="0"
+                   Text="{Binding TodayDate, StringFormat='Date: {0:d}'}"
+                   FontSize="16"
+                   FontWeight="Bold"
                    Margin="0,0,0,10"/>
 
+        <!-- DatePicker (no button) -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Select Date:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay}" Width="140"/>
+        </StackPanel>
 
-        <Border Grid.Row="1" Background="#EEE" Padding="10" CornerRadius="8" Margin="0,0,0,10">
+        <!-- Goals -->
+        <Border Grid.Row="2" Background="#EEE" Padding="10" CornerRadius="8" Margin="0,0,0,10">
             <StackPanel>
                 <TextBlock Text="Daily Goals" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
                 <WrapPanel>
@@ -39,10 +54,12 @@
             </StackPanel>
         </Border>
 
-
-        <DataGrid Grid.Row="2" ItemsSource="{Binding TodaysItems}"
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding TodaysItems}"
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                  AutoGenerateColumns="False" Margin="0,0,0,10">
+                  AutoGenerateColumns="False"
+                  Margin="0,0,0,10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Food" Binding="{Binding Name}" Width="*"/>
                 <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="80"/>
@@ -54,10 +71,9 @@
             </DataGrid.Columns>
         </DataGrid>
 
-
-        <Border Grid.Row="3" Background="#F5F5F5" Padding="10" CornerRadius="8" Margin="0,0,0,10">
+        <!-- Totals -->
+        <Border Grid.Row="4" Background="#F5F5F5" Padding="10" CornerRadius="8" Margin="0,0,0,10">
             <WrapPanel HorizontalAlignment="Right">
-                
                 <TextBlock Text="Total Calories:" FontWeight="SemiBold"/>
                 <TextBlock Text="{Binding TotalCalories}" Margin="5,0,15,0"/>
                 <TextBlock Text="Protein:" FontWeight="SemiBold"/>
@@ -68,15 +84,13 @@
                 <TextBlock Text="{Binding TotalFat}"/>
             </WrapPanel>
         </Border>
-        
-        
-        <StackPanel Grid.Row="4"
+
+        <!-- Delete button -->
+        <StackPanel Grid.Row="5"
                     Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,0,0">
-          
-            <Button Content="Delete" 
-                    Command="{Binding DeleteItemCommand}" 
+                    HorizontalAlignment="Right">
+            <Button Content="Delete"
+                    Command="{Binding DeleteItemCommand}"
                     CommandParameter="{Binding SelectedItem}"
                     Width="120"/>
         </StackPanel>
