@@ -9,16 +9,29 @@ using MongoDB.Driver;
 namespace Labb3_CalorieTrackerMongoDB.ViewModels
 {
     public class FoodViewModel : ViewModelBase
-    {
-        private readonly MongoService _mongoService;
 
-        private readonly DailyLogViewModel _todaysLogVM;
-        public ObservableCollection<Food> Foods { get; set; } = new ObservableCollection<Food>();
+        {
+        private readonly MongoService _mongoService;
+        private readonly DailyLogViewModel _todaysLogVM;public ObservableCollection<Food> Foods { get; set; } = new ObservableCollection<Food>();
+
+
         public ICommand LoadFoodsCommand { get; }
         public ICommand AddFoodCommand { get; }
         public ICommand UpdateFoodCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand AddToTodayCommand { get; }
+
+
+        private double _consumedAmount;
+        public double ConsumedAmount
+        {
+            get => _consumedAmount;
+            set
+            {
+                _consumedAmount = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private Food? _selectedFood;
         public Food? SelectedFood
@@ -28,12 +41,18 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             {
                 _selectedFood = value;
                 RaisePropertyChanged();
+
+                if (_selectedFood != null)
+                {
+                    ConsumedAmount = _selectedFood.Amount;
+                }
+
                 (DeleteCommand as AsyncDelegateCommand)?.RaiseCanExecuteChanged();
-                (AddToTodayCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+                (AddToTodayCommand as AsyncDelegateCommand)?.RaiseCanExecuteChanged();
                 (UpdateFoodCommand as AsyncDelegateCommand)?.RaiseCanExecuteChanged();
+
             }
         }
-
         public FoodViewModel(DailyLogViewModel todaysLogVM, MongoService mongoService)
         {
             _todaysLogVM = todaysLogVM;
@@ -55,21 +74,21 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                  _ => SelectedFood != null
                 );
 
-            AddToTodayCommand = new DelegateCommand(
-                food => AddSelectedFoodToToday(),
+            AddToTodayCommand = new AsyncDelegateCommand(
+                food => AddSelectedFoodToTodayAsync(),
                 _ => SelectedFood != null
-);
+        );
 
-            // Correct way to load foods at startup (fire and forget)
+     
             Task.Run(() => LoadFoodsAsync());
         }
-
         private async Task LoadFoodsAsync()
         {
             var foods = await _mongoService.Foods.Find(_ => true).ToListAsync();
             Foods.Clear();
             foreach (var food in foods)
-                Foods.Add(food);
+            Foods.Add(food);
+            RaisePropertyChanged();
         }
         private async Task OpenFoodDialogAsync(Food? food = null)
         {
@@ -80,7 +99,6 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             dialog.ShowDialog();
             await LoadFoodsAsync();
         }
-
         private async Task DeleteAsync()
         {
             if (SelectedFood == null)
@@ -100,17 +118,15 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             Foods.Remove(SelectedFood);
             SelectedFood = null;
         }
-
-        private void AddSelectedFoodToToday()
+        private async Task AddSelectedFoodToTodayAsync()
         {
             if (SelectedFood == null)
                 return;
 
-            _todaysLogVM.AddFoodFromListAsync(
-                SelectedFood,
-                SelectedFood.Amount
-        );
-
+            var amount = ConsumedAmount <= 0 ? SelectedFood.Amount : ConsumedAmount;
+            
+            
+            await  _todaysLogVM.AddFoodFromListAsync(SelectedFood, SelectedFood.Amount);
 
         }
     }
