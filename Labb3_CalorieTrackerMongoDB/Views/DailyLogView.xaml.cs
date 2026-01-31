@@ -25,7 +25,6 @@ namespace Labb3_CalorieTrackerMongoDB.Views
         public DailyLogView()
         {
             InitializeComponent();
-          
         }
     }
 }

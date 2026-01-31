@@ -1,83 +1,171 @@
 ﻿<UserControl x:Class="Labb3_CalorieTrackerMongoDB.Views.WeeklySummaryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="900"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch"
+             mc:Ignorable="d"
+             d:DesignHeight="500" d:DesignWidth="900"
              d:DataContext="{d:DesignInstance Type=viewmodels:WeeklySummaryViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#F8EFDA"/>
-        <SolidColorBrush x:Key="HeaderBrush" Color="#7A8450"/>
-        <SolidColorBrush x:Key="TextBrush" Color="#3F4A2C"/>
-        <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="BorderBrush" Color="#D8D1B8"/>
+        <!-- Theme -->
+        <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
+        <SolidColorBrush x:Key="VanillaBackground" Color="#F8EFDA"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BorderBrushVanilla" Color="#D8D1B8"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#3F4A2C"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#8A8F75"/>
+
+        <!-- Card -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushVanilla}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="18"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.12"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGrid -->
+        <Style TargetType="DataGrid">
+            <Setter Property="RowBackground" Value="#FAF7EE"/>
+            <Setter Property="AlternatingRowBackground" Value="#F3EFDF"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#E1E6C9"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="MinHeight" Value="46"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding HasLog}" Value="False">
+                    <Setter Property="Opacity" Value="0.45"/>
+                </DataTrigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#D6E1B4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource BackgroundBrush}">
+    <Grid Background="{StaticResource VanillaBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,20,0,16">
-            <TextBlock Text="Weekly Statistics" 
-                       FontSize="24" 
-                       FontWeight="Bold" 
-                       Foreground="{StaticResource HeaderBrush}" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding WeekRange}" 
-                       FontSize="14" 
-                       Foreground="{StaticResource TextBrush}" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,4,0,0"/>
-            <TextBlock Text="Prot: Protein, Carb: Carbohydrates, Fat: Fat, Kcal: Calories" 
-                       FontSize="12" 
-                       Foreground="{StaticResource TextBrush}" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="Result: ✅ = Goal met or under, ⚠️ = Exceeded goal" 
-                       FontSize="12" 
-                       FontStyle="Italic" 
-                       Foreground="{StaticResource TextBrush}" 
-                       HorizontalAlignment="Center"/>
-        </StackPanel>
+        <Border Margin="18" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- DataGrid Card -->
-        <Border Grid.Row="1"
-                Background="{StaticResource CardBrush}"
-                CornerRadius="18"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                Padding="16"
-                Margin="32"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                SnapsToDevicePixels="True">
-            <DataGrid ItemsSource="{Binding WeeklyLogs}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      IsReadOnly="True"
-                      AlternationCount="2"
-                      GridLinesVisibility="None"
-                      BorderThickness="0"
-                      HeadersVisibility="Column"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="110"/>
-                    <DataGridTextColumn Header="Goal Kcal" Binding="{Binding GoalCalories}" Width="90"/>
-                    <DataGridTextColumn Header="Actual Kcal" Binding="{Binding ActualCalories}" Width="110"/>
-                    <DataGridTextColumn Header="Prot" Binding="{Binding Protein}" Width="80"/>
-                    <DataGridTextColumn Header="Carb" Binding="{Binding Carbs}" Width="80"/>
-                    <DataGridTextColumn Header="Fat" Binding="{Binding Fat}" Width="80"/>
-                    <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="80"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                <StackPanel>
+                    <TextBlock Text="Weekly Summary"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource MatchaPrimary}"/>
+                    <TextBlock Text="{Binding WeekRange}"
+                               Margin="0,6,0,0"
+                               FontSize="14"
+                               Foreground="{StaticResource TextMuted}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <Border Grid.Row="1" Margin="18,0,18,18" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Weekly totals bar -->
+                <Border Grid.Row="0"
+                        Margin="0,0,0,12"
+                        Padding="14"
+                        CornerRadius="14"
+                        Background="#FFFDF7"
+                        BorderBrush="{StaticResource BorderBrushVanilla}"
+                        BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="This week:"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextMuted}"/>
+                            <TextBlock Margin="8,0,0,0"
+                                       Text="{Binding WeekCaloriesSummaryText}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimary}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding DaysLogged, StringFormat=Logged: {0}/7}"
+                                       Foreground="{StaticResource TextMuted}"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Margin="14,0,0,0"
+                                       Text="{Binding AvgCalories, StringFormat=Avg kcal: {0:F0}}"
+                                       Foreground="{StaticResource TextMuted}"
+                                       FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+       
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding WeekItems}"
+                          AutoGenerateColumns="False">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Day"
+                                            Width="170"
+                                            Binding="{Binding Date, StringFormat='{}{0:ddd, MMM d}'}"/>
+
+                        <DataGridTextColumn Header="Goal" Width="70" Binding="{Binding GoalCalories}"/>
+                        <DataGridTextColumn Header="Actual" Width="70" Binding="{Binding ActualCalories}"/>
+                        <DataGridTextColumn Header="Diff" Width="70" Binding="{Binding CaloriesDiffText}"/>
+
+               
+                        <DataGridTextColumn Header="Protein Actual/Goal" Width="Auto" Binding="{Binding ProteinText}"/>
+                        <DataGridTextColumn Header="Carbs Actual/Goal" Width="Auto" Binding="{Binding CarbsText}"/>
+                        <DataGridTextColumn Header="Fat Actual/Goal" Width="Auto" Binding="{Binding FatText}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
