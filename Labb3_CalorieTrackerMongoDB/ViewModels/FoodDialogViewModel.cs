@@ -1,11 +1,8 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using Labb3_CalorieTrackerMongoDB.Commands;
 using Labb3_CalorieTrackerMongoDB.Models;
-using Microsoft.Win32;
 using MongoDB.Bson;
-using MongoDB.Bson.IO;
 using MongoDB.Driver;
 
 namespace Labb3_CalorieTrackerMongoDB.ViewModels
@@ -16,8 +13,8 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         public Food FoodItem { get; set; }
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
-        public bool IsEditMode => FoodItem?.Id != ObjectId.Empty;
 
+        public bool IsEditMode => FoodItem?.Id != ObjectId.Empty;
         public FoodDialogViewModel(MongoService mongoService, Food? food = null)
         {
             _mongoService = mongoService;
@@ -26,6 +23,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             SaveCommand = new AsyncDelegateCommand(SaveAsync);
             CancelCommand = new AsyncDelegateCommand(CancelAsync);
+
         }
         private async Task SaveAsync(object? obj)
         {
