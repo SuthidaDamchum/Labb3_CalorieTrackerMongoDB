@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Labb3_CalorieTrackerMongoDB.Models;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Linq;
 
 namespace Labb3_CalorieTrackerMongoDB.Models
 {
@@ -13,20 +8,18 @@ namespace Labb3_CalorieTrackerMongoDB.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-
-
         public DateTime Date { get; set; }
-
         public List<DailyLogItem> Items { get; set; } = new();
-        public int TotalCalories { get; set; }
-        public int TotalProtein { get; set; }
-        public int TotalCarbs { get; set; }
-        public int TotalFat { get; set; }
-      
-      
-   
-    }
+    
+        public int GoalCalories { get; set; }
+        public int GoalProtein { get; set; }
+        public int GoalCarbs { get; set; }
+        public int GoalFat { get; set; }
 
+        [BsonIgnore]
+        public int TotalCalories => Items?.Sum(i => i.Calories) ?? 0;
+    }
 }
+
 
 
