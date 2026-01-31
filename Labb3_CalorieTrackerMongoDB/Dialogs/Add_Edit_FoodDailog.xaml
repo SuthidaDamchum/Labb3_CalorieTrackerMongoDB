@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labb3_CalorieTrackerMongoDB.Dialogs"
         xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
+        xmlns:models="clr-namespace:Labb3_CalorieTrackerMongoDB.Models"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Add/Edit Food" Height="350" Width="450"
         WindowStartupLocation="CenterScreen"
@@ -12,31 +14,55 @@
         ResizeMode="NoResize"
         WindowStyle="None">
 
-    <Border CornerRadius="12" Background="White" Padding="20" 
-            BorderBrush="#C1E1C1" BorderThickness="2" SnapsToDevicePixels="True">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="UnitValues"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:Unit"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
 
-        <Grid Margin="0">
+    <Border CornerRadius="12"
+            Background="White"
+            Padding="20"
+            BorderBrush="#C1E1C1"
+            BorderThickness="2"
+            SnapsToDevicePixels="True">
+
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-  
-            <TextBlock Grid.Row="0" Text="Add / Edit Food"
-                       FontSize="24" FontWeight="Bold" Foreground="#2E7D32"
-                       HorizontalAlignment="Center" Margin="0,0,0,20"/>
+     
+            <TextBlock Grid.Row="0"
+                       Text="Add / Edit Food"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#2E7D32"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
 
-       
-            <StackPanel Grid.Row="1" VerticalAlignment="Top">
-   
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="Name" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                    <TextBox Text="{Binding FoodItem.Name, UpdateSourceTrigger=PropertyChanged}" 
-                             Padding="8" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
+
+            <StackPanel Grid.Row="1">
+
+             
+                <StackPanel Margin="0,0,0,14">
+                    <TextBlock Text="Name"
+                               FontWeight="SemiBold"
+                               Foreground="#2E7D32"/>
+                    <TextBox Text="{Binding FoodItem.Name, UpdateSourceTrigger=PropertyChanged}"
+                             Padding="8"
+                             FontSize="14"
+                             Background="#F1F8F1"
+                             BorderBrush="#A5D6A7"
+                             BorderThickness="1"/>
                 </StackPanel>
 
-   
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -44,64 +70,86 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-      
+                  
                     </Grid.ColumnDefinitions>
 
-                    
-                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                   
+                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
                         <TextBlock Text="Protein" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                        <TextBox Text="{Binding FoodItem.Protein, UpdateSourceTrigger=PropertyChanged}" 
-                                 Padding="6" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
+                        <TextBox Text="{Binding FoodItem.Protein, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="6"
+                                 Background="#F1F8F1"
+                                 BorderBrush="#A5D6A7"
+                                 BorderThickness="1"/>
                     </StackPanel>
 
-
-                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+ 
+                    <StackPanel Grid.Column="1" Margin="0,0,8,0">
                         <TextBlock Text="Carbs" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                        <TextBox Text="{Binding FoodItem.Carbs, UpdateSourceTrigger=PropertyChanged}" 
-                                 Padding="6" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
+                        <TextBox Text="{Binding FoodItem.Carbs, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="6"
+                                 Background="#F1F8F1"
+                                 BorderBrush="#A5D6A7"
+                                 BorderThickness="1"/>
                     </StackPanel>
 
-                 
-                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                    <StackPanel Grid.Column="2" Margin="0,0,8,0">
                         <TextBlock Text="Fat" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                        <TextBox Text="{Binding FoodItem.Fat, UpdateSourceTrigger=PropertyChanged}" 
-                                 Padding="6" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
+                        <TextBox Text="{Binding FoodItem.Fat, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="6"
+                                 Background="#F1F8F1"
+                                 BorderBrush="#A5D6A7"
+                                 BorderThickness="1"/>
                     </StackPanel>
 
-         
-                    <StackPanel Grid.Column="3">
+                    <!-- CALORIES -->
+                    <StackPanel Grid.Column="3" Margin="0,0,8,0">
                         <TextBlock Text="Calories" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                        <TextBox Text="{Binding FoodItem.Calories, UpdateSourceTrigger=PropertyChanged}" 
-                                 Padding="6" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
+                        <TextBox Text="{Binding FoodItem.Calories, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="6"
+                                 Background="#F1F8F1"
+                                 BorderBrush="#A5D6A7"
+                                 BorderThickness="1"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="4">
-                        <TextBlock Text="Amount" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                        <TextBox Text="{Binding FoodItem.Amount, UpdateSourceTrigger=PropertyChanged}" 
-                     Padding="6" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
-                    </StackPanel>
-                    
+    
                     <StackPanel Grid.Column="5">
                         <TextBlock Text="Unit" FontWeight="SemiBold" Foreground="#2E7D32"/>
-                        <TextBox Text="{Binding FoodItem.Unit, UpdateSourceTrigger=PropertyChanged}" 
-                    Padding="6" FontSize="14" Background="#F1F8F1" BorderBrush="#A5D6A7" BorderThickness="1"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource UnitValues}}"
+                                  SelectedItem="{Binding FoodItem.Unit, Mode=TwoWay}"
+                                  Padding="6"
+                                  Background="#F1F8F1"
+                                  BorderBrush="#A5D6A7"
+                                  BorderThickness="1"/>
                     </StackPanel>
-
-                 
-
                 </Grid>
             </StackPanel>
 
-           
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                <Button Content="Cancel" Width="90" Height="36" Command="{Binding CancelCommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                        Background="#E0F2F1" Foreground="#2E7D32" FontWeight="SemiBold" 
-                        BorderBrush="#A5D6A7" BorderThickness="1"/>
-                <Button Content="Save" Width="90" Height="36" Command="{Binding SaveCommand}" 
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
-                        Background="#2E7D32" Foreground="White" FontWeight="Bold" Margin="10,0,0,0"/>
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,20,0,0">
+
+                <Button Content="Cancel"
+                        Width="90"
+                        Height="36"
+                        Command="{Binding CancelCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                        Background="#E0F2F1"
+                        Foreground="#2E7D32"
+                        FontWeight="SemiBold"
+                        BorderBrush="#A5D6A7"
+                        BorderThickness="1"/>
+
+                <Button Content="Save"
+                        Width="90"
+                        Height="36"
+                        Command="{Binding SaveCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                        Background="#2E7D32"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Margin="10,0,0,0"/>
             </StackPanel>
         </Grid>
     </Border>
