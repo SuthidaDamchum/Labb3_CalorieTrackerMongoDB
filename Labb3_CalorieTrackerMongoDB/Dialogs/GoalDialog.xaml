@@ -1,20 +1,254 @@
 ﻿<Window x:Class="Labb3_CalorieTrackerMongoDB.Dialogs.GoalDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Labb3_CalorieTrackerMongoDB.Dialogs"
         xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
-        mc:Ignorable="d"
-        Title="Set Daily Goals" Height="450" Width="800">
-    
-    <Grid>
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        Title="Set New Goals"
+        Width="340" Height="470"
+        
+        WindowStartupLocation="CenterScreen"
+       
+        Background="#F8EFDA">
+
+    <Window.Resources>
+        
+        <!-- Theme -->
+        <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
+        <SolidColorBrush x:Key="MatchaPrimaryDark" Color="#5F6B3A"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BorderBrushVanilla" Color="#D8D1B8"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#3F4A2C"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#8A8F75"/>
+
+
+        <Style x:Key="InputBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="Background" Value="#FFFDF7"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushVanilla}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="12"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer x:Name="PART_ContentHost" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource MatchaPrimary}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="12"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GhostButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+            <Setter Property="Background" Value="#FFFDF7"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushVanilla}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="12"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+
+        <Style x:Key="UnitText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+        </Style>
+    </Window.Resources>
+
+
+
+    <i:Interaction.Triggers>
+        <i:DataTrigger Binding="{Binding DialogResult}" Value="True">
+            <i:CallMethodAction TargetObject="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            MethodName="Close" />
+        </i:DataTrigger>
+    </i:Interaction.Triggers>
+
+
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel Grid.Row="0" Margin="2,2,2,14">
+            <TextBlock Text="Set New Goals"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource MatchaPrimary}"/>
+            <TextBlock Text="Update your daily calorie and macro targets."
+                       FontSize="13"
+                       Foreground="{StaticResource TextMuted}"
+                       TextWrapping="Wrap"
+                       Margin="0,6,0,0"/>
+        </StackPanel>
+
+
+        <Border Grid.Row="1"
+                Background="{StaticResource CardBackground}"
+                CornerRadius="18"
+                BorderBrush="{StaticResource BorderBrushVanilla}"
+                BorderThickness="1"
+                Padding="18">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Calories" Style="{StaticResource FieldLabel}"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Style="{StaticResource InputBoxStyle}"
+                                 Text="{Binding GoalCaloriesText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Column="1" Text="kcal" Style="{StaticResource UnitText}"/>
+                    </Grid>
+                </Grid>
+
+
+                <Grid Grid.Row="1" Margin="0,0,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Protein" Style="{StaticResource FieldLabel}"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Style="{StaticResource InputBoxStyle}"
+                                 Text="{Binding GoalProteinText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Column="1" Text="g" Style="{StaticResource UnitText}"/>
+                    </Grid>
+                </Grid>
+
       
+                <Grid Grid.Row="2" Margin="0,0,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Carbs" Style="{StaticResource FieldLabel}"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Style="{StaticResource InputBoxStyle}"
+                                 Text="{Binding GoalCarbsText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Column="1" Text="g" Style="{StaticResource UnitText}"/>
+                    </Grid>
+                </Grid>
 
 
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Fat" Style="{StaticResource FieldLabel}"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Style="{StaticResource InputBoxStyle}"
+                                 Text="{Binding GoalFatText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Column="1" Text="g" Style="{StaticResource UnitText}"/>
+                    </Grid>
+                </Grid>
 
+            </Grid>
+        </Border>
 
+        <Grid Grid.Row="2" Margin="0,16,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource TextMuted}"
+                       FontSize="12"
+                       HorizontalAlignment="Center" Width="44" />
 
+            <Button Grid.Column="1"
+                    Style="{StaticResource GhostButton}"
+                    Content="Cancel"
+                    Width="120"
+                    Margin="0,0,12,0"
+                    IsCancel="True"/>
+
+            <Button Grid.Column="2"
+                    Style="{StaticResource PrimaryButton}"
+                    Content="Save"
+                    Height="30"
+                    Width="120"
+                    IsDefault="True"
+                    Command="{Binding SaveCommand}"
+                     IsEnabled="{Binding CanSave}" />
+        </Grid>
     </Grid>
 </Window>
