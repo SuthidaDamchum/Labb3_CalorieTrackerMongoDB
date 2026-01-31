@@ -6,7 +6,7 @@ using Labb3_CalorieTrackerMongoDB.Models;
 
 namespace Labb3_CalorieTrackerMongoDB.ViewModels
 {
-         public class MainWindowViewModel : ViewModelBase
+        public class MainWindowViewModel : ViewModelBase
         {
         private object _currentView;
 
@@ -22,8 +22,6 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         public ICommand ShowTodaysLogCommand { get; }
         public ICommand ShowFoodListCommand { get; }
         public ICommand ShowWeeklySummaryCommand { get; }
-
-
         public MainWindowViewModel()
         {
             var mongoService = new MongoService();
