@@ -2,36 +2,107 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
-        Title="Calorie Tracker" Height="450" Width="800"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d">
+        mc:Ignorable="d"
+        Title="Calorie Tracker"
+        Width="900"
+        Height="620"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8EFDA">
 
-    <Window.DataContext>
-        <viewmodels:MainWindowViewModel/>
-    </Window.DataContext>
+        <Window.DataContext>
+            <viewmodels:MainWindowViewModel/>
+        </Window.DataContext>
 
-    <DockPanel>
+        <Window.Resources>
+     
+        <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
+        <SolidColorBrush x:Key="MatchaPrimaryDark" Color="#5F6B3A"/>
+        <SolidColorBrush x:Key="VanillaBackground" Color="#F8EFDA"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BorderBrushVanilla" Color="#D8D1B8"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#3F4A2C"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#8A8F75"/>
 
- 
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="#2D2D30" Height="50">
-            <TextBlock Text="Calorie Tracker" 
-                       Foreground="White" FontSize="18" FontWeight="Bold" 
-                       VerticalAlignment="Center" Margin="10"/>
+        <Style x:Key="MenuTabButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="52"/>
+            <Setter Property="MinWidth" Value="190"/>
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushVanilla}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="16">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource MatchaPrimaryDark}"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
-            <Button Content="Today's Log" Width="120" Margin="10,5"
-                    Command="{Binding ShowTodaysLogCommand}"/>
+    <DockPanel Background="{StaticResource VanillaBackground}">
 
-            <Button Content="Food List" Width="120" Margin="10,5"
-                    Command="{Binding ShowFoodListCommand}"/>
 
-            <Button Content="Weekly Summary" Width="140" Margin="10,5"
-                    Command="{Binding ShowWeeklySummaryCommand}"/>
-        </StackPanel>
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource VanillaBackground}"
+                Padding="24,18,24,0">
+            <StackPanel>
+        
+                <StackPanel Margin="0,0,0,5">
+                    <TextBlock Text="Calorie Tracker"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource MatchaPrimary}"/>
+                    <TextBlock Text="Daily log • food library • weekly summary"
+                               FontSize="12"
+                               Foreground="{StaticResource TextMuted}"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
 
- 
-        <ContentControl Content="{Binding CurrentView}" Background="#F5F5F5"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource MenuTabButtonStyle}"
+                            Content="📅 Daily Log"
+                            Command="{Binding ShowTodaysLogCommand}"
+                            Margin="0,0,10,0"/>
 
-        <ContentControl x:Name="DailyLogViewControl" />
+                    <Button Style="{StaticResource MenuTabButtonStyle}"
+                            Content="🍽 Food List"
+                            Command="{Binding ShowFoodListCommand}"
+                            Margin="0,0,10,0"/>
+
+                    <Button Style="{StaticResource MenuTabButtonStyle}"
+                            Content="📊 Weekly"
+                            Command="{Binding ShowWeeklySummaryCommand}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Margin="24,0,24,24"
+                Background="{StaticResource CardBackground}"
+                BorderBrush="{StaticResource BorderBrushVanilla}"
+                BorderThickness="1"
+                CornerRadius="18">
+            <ContentControl Content="{Binding CurrentView}"
+                            Background="Transparent"/>
+        </Border>
+
     </DockPanel>
 </Window>

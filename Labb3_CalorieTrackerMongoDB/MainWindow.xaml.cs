@@ -13,12 +13,8 @@ namespace Labb3_CalorieTrackerMongoDB
         public MainWindow()
         {
             InitializeComponent();
-            var mongoService = new MongoService();
-            var dailyLogVM = new DailyLogViewModel(mongoService);
-
-            DailyLogViewControl.DataContext = dailyLogVM;
+            
         }
     }
 
-}   
-
+}
