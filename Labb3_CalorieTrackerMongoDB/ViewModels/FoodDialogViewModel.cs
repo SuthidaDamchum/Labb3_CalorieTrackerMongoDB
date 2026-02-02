@@ -28,12 +28,17 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         }
         private async Task SaveAsync(object? obj)
         {
+            if (string.IsNullOrEmpty(FoodItem.Name))
+            {
+                MessageBox.Show("Food name is required!", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             if (IsEditMode)
             {
                 var filter = Builders<Food>.Filter.Eq(f => f.Id, FoodItem.Id);
                 await _mongoService.Foods.ReplaceOneAsync(filter, FoodItem);
             }
-
             else
             {
                 await _mongoService.Foods.InsertOneAsync(FoodItem);
@@ -52,6 +57,4 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
     }
 }
-
-
 

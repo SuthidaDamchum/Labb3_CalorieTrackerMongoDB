@@ -10,7 +10,7 @@ namespace Labb3_CalorieTrackerMongoDB.Services
         public MongoService()
         {
             var client = new MongoClient("mongodb://localhost:27017");
-            _database = client.GetDatabase("SuthidaDamchum2"); 
+            _database = client.GetDatabase("SuthidaDamchum"); 
         }
         public IMongoCollection<Food> Foods => _database.GetCollection<Food>("food");
         public IMongoCollection<DailyLog> DailyLogs => _database.GetCollection<DailyLog>("dailylogs");
