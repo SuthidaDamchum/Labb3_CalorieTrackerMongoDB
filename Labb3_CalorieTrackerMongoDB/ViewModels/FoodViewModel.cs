@@ -4,15 +4,16 @@ using System.Windows.Input;
 using Labb3_CalorieTrackerMongoDB.Commands;
 using Labb3_CalorieTrackerMongoDB.Dialogs;
 using Labb3_CalorieTrackerMongoDB.Models;
+using Labb3_CalorieTrackerMongoDB.Services;
 using MongoDB.Driver;
 
 namespace Labb3_CalorieTrackerMongoDB.ViewModels
 {
     public class FoodViewModel : ViewModelBase
 
-        {
+    {
         private readonly MongoService _mongoService;
-        private readonly DailyLogViewModel _todaysLogVM;public ObservableCollection<Food> Foods { get; set; } = new ObservableCollection<Food>();
+        private readonly DailyLogViewModel _CurrentLogVM; public ObservableCollection<Food> Foods { get; set; } = new ObservableCollection<Food>();
 
 
         public ICommand LoadFoodsCommand { get; }
@@ -55,7 +56,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         }
         public FoodViewModel(DailyLogViewModel todaysLogVM, MongoService mongoService)
         {
-            _todaysLogVM = todaysLogVM;
+            _CurrentLogVM = todaysLogVM;
 
             _mongoService = mongoService;
 
@@ -79,7 +80,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                 _ => SelectedFood != null
         );
 
-     
+
             Task.Run(() => LoadFoodsAsync());
         }
         private async Task LoadFoodsAsync()
@@ -87,12 +88,12 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             var foods = await _mongoService.Foods.Find(_ => true).ToListAsync();
             Foods.Clear();
             foreach (var food in foods)
-            Foods.Add(food);
+                Foods.Add(food);
             RaisePropertyChanged();
         }
         private async Task OpenFoodDialogAsync(Food? food = null)
         {
-            var dialog = new Add_Edit_FoodDailog();
+            var dialog = new Add_Edit_FoodDialog();
             var vm = new FoodDialogViewModel(_mongoService, food);
             dialog.DataContext = vm;
 
@@ -117,6 +118,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             Foods.Remove(SelectedFood);
             SelectedFood = null;
+            SelectedFood = null;
         }
         private async Task AddSelectedFoodToTodayAsync()
         {
@@ -124,9 +126,9 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                 return;
 
             var amount = ConsumedAmount <= 0 ? SelectedFood.Amount : ConsumedAmount;
-            
-            
-            await  _todaysLogVM.AddFoodFromListAsync(SelectedFood, SelectedFood.Amount);
+
+
+            await _CurrentLogVM.AddFoodFromListAsync(SelectedFood, amount);
 
         }
     }

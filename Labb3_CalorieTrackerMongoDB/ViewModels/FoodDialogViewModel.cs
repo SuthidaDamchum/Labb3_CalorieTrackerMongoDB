@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Labb3_CalorieTrackerMongoDB.Commands;
 using Labb3_CalorieTrackerMongoDB.Models;
+using Labb3_CalorieTrackerMongoDB.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
