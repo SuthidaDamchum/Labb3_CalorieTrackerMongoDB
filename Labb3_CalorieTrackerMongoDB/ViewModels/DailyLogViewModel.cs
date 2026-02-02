@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Labb3_CalorieTrackerMongoDB.Commands;
 using Labb3_CalorieTrackerMongoDB.Dialogs;
 using Labb3_CalorieTrackerMongoDB.Models;
+using Labb3_CalorieTrackerMongoDB.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -116,9 +117,10 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             await EnsureLogExistsForDateAsync(SelectedDate);
 
             var dialog = new GoalDialog();
+
             dialog.DataContext = new SetNewGoalViewModel(
                 _mongoService,
-                DailyLog.Date,
+                SelectedDate,
                 new SetNewGoal
                 {
                     GoalCalories = DailyLog.GoalCalories,
@@ -127,13 +129,31 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
                     GoalFat = DailyLog.GoalFat
                 });
 
-            dialog.ShowDialog();
+            var result = dialog.ShowDialog();
 
             if (dialog.DataContext is SetNewGoalViewModel vm && vm.DialogResult == true)
             {
 
-                DailyLog = await _mongoService.GetDailyLogByDateAsync(DailyLog.Date)
-                          ?? new DailyLog { Date = DailyLog.Date, Items = new List<DailyLogItem>() };
+                var refreshed = await _mongoService.GetDailyLogByDateAsync(SelectedDate);
+
+                DailyLog = refreshed ?? new DailyLog
+                {
+                    Date = SelectedDate.Date,
+                    Items = new List<DailyLogItem>()
+                };
+
+                TodaysItems.Clear();
+                if (DailyLog.Items != null)
+
+                    foreach (var item in DailyLog.Items)
+                        TodaysItems.Add(item);
+
+                RaisePropertyChanged(nameof(GoalCalories));
+                RaisePropertyChanged(nameof(GoalProtein));
+                RaisePropertyChanged(nameof(GoalCarbs));
+                RaisePropertyChanged(nameof(GoalFat));
+
+
             }
         }
 
@@ -168,31 +188,29 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
         private async Task LoadLogForDateAsync()
         {
-            var selectedDate = SelectedDate.Date;
+            var date = SelectedDate.Date;
 
-            var log = await _mongoService.GetDailyLogByDateAsync(selectedDate);
+            var dailyLog = await _mongoService.GetOrCreateTodayLogAsync(date);
+
+            DailyLog = dailyLog;
 
             TodaysItems.Clear();
-            if (log != null && log.Items != null)
+
+            if (dailyLog.Items != null)
             {
-                DailyLog = log;
-                foreach (var item in log.Items)
+
+                foreach (var item in dailyLog.Items)
+
                     TodaysItems.Add(item);
-            }
-            else
-            {
-                DailyLog = new DailyLog { Date = selectedDate, Items = new List<DailyLogItem>() };
-            }
-            RaisePropertyChanged(nameof(TotalCalories));
-            RaisePropertyChanged(nameof(TotalProtein));
-            RaisePropertyChanged(nameof(TotalCarbs));
-            RaisePropertyChanged(nameof(TotalFat));
 
-            await Labb3_CalorieTrackerMongoDB.Models.AppEvents
-                                     .RaiseDailyLogChangedAsync();
+                RaisePropertyChanged(nameof(TotalCalories));
+                RaisePropertyChanged(nameof(TotalProtein));
+                RaisePropertyChanged(nameof(TotalCarbs));
+                RaisePropertyChanged(nameof(TotalFat));
 
+                await AppEvents.RaiseDailyLogChangedAsync();
+            }
         }
-
         public async Task AddFoodFromListAsync(Food f, double ConsumedAmount)
         {
 
@@ -236,7 +254,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
 
                 await _mongoService.AddItemToDailyLogAsync(DailyLog.Id, item);
-                
+
             }
 
             RaisePropertyChanged(nameof(TotalCalories));
@@ -245,17 +263,22 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             RaisePropertyChanged(nameof(TotalFat));
 
 
-            await Labb3_CalorieTrackerMongoDB.Models.AppEvents
+            await AppEvents
                  .RaiseDailyLogChangedAsync();
 
         }
 
         private async Task EnsureLogExistsForDateAsync(DateTime date)
         {
-            if (DailyLog != null && DailyLog.Id != ObjectId.Empty && DailyLog.Date.Date == date.Date)
-                return;
+            var localDate = date.Date;
 
-            DailyLog = await _mongoService.GetOrCreateTodayLogAsync(date.Date);
+            if (DailyLog != null && DailyLog.Id != ObjectId.Empty)
+            {
+                var existing = await _mongoService.GetDailyLogByDateAsync(localDate);
+                if (existing != null && existing.Id == DailyLog.Id)
+                    return;
+            }
+            DailyLog = await _mongoService.GetOrCreateTodayLogAsync(localDate);
         }
 
         private async Task DeleteItemAsync(DailyLogItem? item)
@@ -278,17 +301,17 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             SelectedItem = null;
 
-        
+
             RaisePropertyChanged(nameof(TotalCalories));
             RaisePropertyChanged(nameof(TotalProtein));
             RaisePropertyChanged(nameof(TotalCarbs));
             RaisePropertyChanged(nameof(TotalFat));
 
-            await Labb3_CalorieTrackerMongoDB.Models.AppEvents
+            await AppEvents
             .RaiseDailyLogChangedAsync();
 
         }
-        private async Task UpdateItemAmountAync(DailyLogItem item)
+        private async Task UpdateItemAmountAsync(DailyLogItem item)
         {
             await _mongoService.UpdateItemInDailyLogAsync(DailyLog.Id, item);
             RaisePropertyChanged(nameof(TotalCalories));
@@ -297,15 +320,15 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             RaisePropertyChanged(nameof(TotalFat));
 
 
-            await Labb3_CalorieTrackerMongoDB.Models.AppEvents
+            await AppEvents
             .RaiseDailyLogChangedAsync();
-        }
+        }           
 
         private async void DailyLogItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(DailyLogItem.Amount) && sender is DailyLogItem item)
             {
-                await UpdateItemAmountAync(item);
+                await UpdateItemAmountAsync(item);
             }
         }
     }
