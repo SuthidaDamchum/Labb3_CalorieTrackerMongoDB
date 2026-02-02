@@ -38,4 +38,24 @@ The app consists of three main views:
 ## Notes
 This project helped me understand how a real application interacts with a NoSQL database and how to structure data for daily and weekly tracking. 
 It also gave me hands-on experience building something I can actually use in everyday life.
-  
+
+## 🖼️ Screenshots
+### Daily Log
+This view shows the food items logged for the selected day, including calories and macronutrients. The amount can be adjusted in this view.
+![DailyLogView](https://github.com/user-attachments/assets/02a85914-01a9-4e0e-bc1f-2152c5e2f7cb)
+
+### Food List
+This view allows the user to add, edit, and delete food items stored in the MongoDB database.
+![FoodView](https://github.com/user-attachments/assets/d35c4b3c-3acf-4c70-aec0-a2dd884b8160)
+
+### Weekly Summary 
+This view shows daily calories and macros for the selected week, with buttons to see the previous and next weeks.
+![WeeklyView](https://github.com/user-attachments/assets/456771ce-b8b2-4b5f-825d-8fc0e0fc854b)
+
+### Add / Edit Food dialog
+Dialog for adding and editing food items.
+![Add-Edit food dialog](https://github.com/user-attachments/assets/131b4ff9-ae86-4fca-ab65-4ff4437aad8b)
+
+
+
+
