@@ -13,13 +13,12 @@ namespace Labb3_CalorieTrackerMongoDB.Models
         [BsonRepresentation(BsonType.String)]
         public Unit Unit { get; set; } = Unit.g;
 
-
         public int Calories { get; set; }
-        public int Protein { get; set; }
-        public int Carbs { get; set; }
-        public int Fat { get; set; }
-       
+        public double Protein { get; set; }
+        public double Carbs { get; set; }
+        public double Fat { get; set; }
 
 
-        }
+
+    }
     }
