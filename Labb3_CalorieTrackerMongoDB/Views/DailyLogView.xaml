@@ -174,14 +174,13 @@
                             Padding="14" Grid.RowSpan="2">
                     <StackPanel>
 
-                        <!-- Title + Set new goal button -->
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Daily Goals"
+                            <TextBlock Text="Weekly plan"
                                            Grid.Column="0"
                                            FontSize="14"
                                            FontWeight="Bold"
@@ -190,7 +189,7 @@
 
                             <Button Grid.Column="1"
                                         Style="{StaticResource MatchaButtonSmallStyle}"
-                                        Content="Set new goal"
+                                        Content="Set weekly goal"
                                         Command="{Binding OpenSetNewGoalDiaLogCommand}"
                                         Margin="10,0,0,0"/>
                         </Grid>
