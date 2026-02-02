@@ -42,7 +42,7 @@ It also gave me hands-on experience building something I can actually use in eve
 ## 🖼️ Screenshots
 ### Daily Log
 This view shows the food items logged for the selected day, including calories and macronutrients. The amount can be adjusted in this view.
-![DailyLogView](https://github.com/user-attachments/assets/02a85914-01a9-4e0e-bc1f-2152c5e2f7cb)
+![DailyLogView](https://github.com/user-attachments/assets/244de8f5-525d-4591-a1ef-1e6bd9664191)
 
 ### Food List
 This view allows the user to add, edit, and delete food items stored in the MongoDB database.
