@@ -9,15 +9,16 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:WeeklySummaryViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
-        <!-- Theme -->
+
         <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
+        <SolidColorBrush x:Key="MatchaPrimaryDark" Color="#5F6B3A"/>
         <SolidColorBrush x:Key="VanillaBackground" Color="#F8EFDA"/>
         <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="BorderBrushVanilla" Color="#D8D1B8"/>
         <SolidColorBrush x:Key="TextPrimary" Color="#3F4A2C"/>
         <SolidColorBrush x:Key="TextMuted" Color="#8A8F75"/>
 
-        <!-- Card -->
+      
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource CardBackground}"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrushVanilla}"/>
@@ -31,7 +32,41 @@
             </Setter>
         </Style>
 
-        <!-- DataGrid -->
+     
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource MatchaPrimary}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="MinWidth" Value="90"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="8,0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource MatchaPrimaryDark}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#C9CFB2"/>
+                    <Setter Property="Foreground" Value="#F5F5F5"/>
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
         <Style TargetType="DataGrid">
             <Setter Property="RowBackground" Value="#FAF7EE"/>
             <Setter Property="AlternatingRowBackground" Value="#F3EFDF"/>
@@ -43,7 +78,7 @@
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="CanUserAddRows" Value="False"/>
             <Setter Property="CanUserResizeRows" Value="False"/>
-            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
         </Style>
 
         <Style TargetType="DataGridColumnHeader">
@@ -73,6 +108,20 @@
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
+
+        <Style x:Key="FocusCellStyle" TargetType="DataGridCell">
+            <Setter Property="Background" Value="#FFF9E5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource MatchaPrimary}"/>
+        </Style>
+        <Style x:Key="FocusHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F5E8B7"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource MatchaPrimaryDark}"/>
+        </Style>
+        <Style x:Key="CenterHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
     </UserControl.Resources>
 
     <Grid Background="{StaticResource VanillaBackground}">
@@ -81,27 +130,52 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Margin="18" Style="{StaticResource CardStyle}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <StackPanel>
+        <Border Margin="8" Style="{StaticResource CardStyle}" Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+                <StackPanel Grid.Row="0">
                     <TextBlock Text="Weekly Summary"
-                               FontSize="26"
+                               FontSize="20"
                                FontWeight="Bold"
                                Foreground="{StaticResource MatchaPrimary}"/>
                     <TextBlock Text="{Binding WeekRange}"
-                               Margin="0,6,0,0"
-                               FontSize="14"
+                               Margin="0,4,0,0"
+                               FontSize="12"
                                Foreground="{StaticResource TextMuted}"/>
+                </StackPanel>
+
+
+                <StackPanel Grid.Row="1"
+                            Orientation="Horizontal"
+                            Margin="0,10,0,0">
+                    <Button Content="◀ Prev"
+                            Style="{StaticResource NavButtonStyle}"
+                            Height="28"
+                            MinWidth="70"
+                            Command="{Binding PrevWeekCommand}"/>
+
+                    <Button Content="This week"
+                            Margin="8,0,8,0"
+                            Style="{StaticResource NavButtonStyle}"
+                            Height="28"
+                            MinWidth="70"
+                            Command="{Binding ThisWeekCommand}"/>
+
+                    <Button Content="Next ▶"
+                            Style="{StaticResource NavButtonStyle}"
+                            Height="28"
+                            MinWidth="70"
+                            Command="{Binding NextWeekCommand}"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Content -->
         <Border Grid.Row="1" Margin="18,0,18,18" Style="{StaticResource CardStyle}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -109,7 +183,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Weekly totals bar -->
+    
                 <Border Grid.Row="0"
                         Margin="0,0,0,12"
                         Padding="14"
@@ -145,24 +219,28 @@
                     </Grid>
                 </Border>
 
-       
                 <DataGrid Grid.Row="1"
                           ItemsSource="{Binding WeekItems}"
-                          AutoGenerateColumns="False">
+                          AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Day"
                                             Width="170"
                                             Binding="{Binding Date, StringFormat='{}{0:ddd, MMM d}'}"/>
 
-                        <DataGridTextColumn Header="Goal" Width="70" Binding="{Binding GoalCalories}"/>
-                        <DataGridTextColumn Header="Actual" Width="70" Binding="{Binding ActualCalories}"/>
-                        <DataGridTextColumn Header="Diff" Width="70" Binding="{Binding CaloriesDiffText}"/>
+                        <DataGridTextColumn Header="Goal" Width="80" Binding="{Binding GoalCalories}" 
+                    CellStyle="{StaticResource FocusCellStyle}"/>
+                        <DataGridTextColumn Header="Actual" Width="80" Binding="{Binding ActualCalories}" 
+                    CellStyle="{StaticResource FocusCellStyle}"/>
+                        <DataGridTextColumn Header="Diff" Width="80" Binding="{Binding CaloriesDiffText}" 
+                    CellStyle="{StaticResource FocusCellStyle}"/>
 
-               
-                        <DataGridTextColumn Header="Protein Actual/Goal" Width="Auto" Binding="{Binding ProteinText}"/>
-                        <DataGridTextColumn Header="Carbs Actual/Goal" Width="Auto" Binding="{Binding CarbsText}"/>
-                        <DataGridTextColumn Header="Fat Actual/Goal" Width="Auto" Binding="{Binding FatText}"/>
+                        <DataGridTextColumn Header="Protein (A/G)" Width="120" Binding="{Binding ProteinText}" 
+                    CellStyle="{StaticResource FocusCellStyle}"/>
+                        <DataGridTextColumn Header="Carbs (A/G)" Width="120" Binding="{Binding CarbsText}" 
+                    CellStyle="{StaticResource FocusCellStyle}"/>
+                        <DataGridTextColumn Header="Fat (A/G)" Width="120" Binding="{Binding FatText}" 
+                    CellStyle="{StaticResource FocusCellStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

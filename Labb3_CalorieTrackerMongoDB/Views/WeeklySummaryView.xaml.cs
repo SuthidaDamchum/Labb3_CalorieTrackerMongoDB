@@ -24,5 +24,7 @@ namespace Labb3_CalorieTrackerMongoDB.Views
         {
             InitializeComponent();
         }
+
+       
     }
 }
