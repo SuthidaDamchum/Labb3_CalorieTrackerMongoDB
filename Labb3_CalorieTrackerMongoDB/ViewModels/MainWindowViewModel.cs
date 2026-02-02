@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Labb3_CalorieTrackerMongoDB.Commands;
 using Labb3_CalorieTrackerMongoDB.Models;
-
+using Labb3_CalorieTrackerMongoDB.Services; 
 namespace Labb3_CalorieTrackerMongoDB.ViewModels
 {
         public class MainWindowViewModel : ViewModelBase

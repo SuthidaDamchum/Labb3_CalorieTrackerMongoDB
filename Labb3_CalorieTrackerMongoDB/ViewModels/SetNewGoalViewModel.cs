@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Labb3_CalorieTrackerMongoDB.Commands;
 using Labb3_CalorieTrackerMongoDB.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Labb3_CalorieTrackerMongoDB.Services;
 
 namespace Labb3_CalorieTrackerMongoDB.ViewModels
 {
@@ -12,18 +11,14 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
     {
 
         private readonly DateTime _date;
+        private readonly MongoService _mongoService;
 
         private bool? _dialogResult;
         public bool? DialogResult
         {
             get => _dialogResult;
-            set { _dialogResult = value; 
-                RaisePropertyChanged(); }
+            set { _dialogResult = value; RaisePropertyChanged(); }
         }
-
-        public SetNewGoal NewGoals { get; set; }
-
-        private readonly MongoService _mongoService;
 
         private string _goalCaloriesText = "";
         public string GoalCaloriesText
@@ -77,7 +72,6 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             }
         }
 
-
         private string _errorMessage = " ";
         public string ErrorMessage
         {
@@ -97,10 +91,8 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
         public SetNewGoalViewModel(MongoService mongoService, DateTime date, SetNewGoal? existing = null)
         {
-
             _mongoService = mongoService ?? throw new ArgumentNullException(nameof(mongoService));
             _date = date.Date;
-            _mongoService = mongoService ?? throw new ArgumentNullException(nameof(mongoService));
 
             if (existing != null)
             {
@@ -112,6 +104,7 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
 
             SaveCommand = new AsyncDelegateCommand(_ => SaveAsync());
             CancelCommand = new DelegateCommand(_ => DialogResult = false);
+
             Validate();
         }
 
@@ -126,21 +119,19 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             try
             {
 
-                var today = DateTime.Today;
+                await _mongoService.UpsertWeeklyGoalAsync(_date, model);
 
-                await _mongoService.UpdateDailyGoalsAyncs(
-                    _date,
-                   model.GoalCalories,
-                    (int)Math.Round(model.GoalProtein),
-                    (int)Math.Round(model.GoalCarbs),
-                    (int)Math.Round(model.GoalFat)
-                );
 
+
+
+                await _mongoService.UpdateDailyGoalsForWeekAsync(_date, model);
+
+                await AppEvents.RaiseDailyLogChangedAsync();
                 DialogResult = true;
             }
             catch (Exception ex)
             {
-                ErrorMessage = "Failed to save goals: " + ex.Message;
+                ErrorMessage = "Failed to save weekly goals: " + ex.Message;
                 CanSave = false;
             }
         }
@@ -161,10 +152,10 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
             if (!double.TryParse(GoalFatText, NumberStyles.Float, CultureInfo.InvariantCulture, out var f) || f < 0)
                 return false;
 
-                model.GoalCalories = kcal;
-                model.GoalProtein = p;
-                model.GoalCarbs = c;
-                model.GoalFat = f;
+            model.GoalCalories = kcal;
+            model.GoalProtein = p;
+            model.GoalCarbs = c;
+            model.GoalFat = f;
 
             return true;
         }
