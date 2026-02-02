@@ -22,13 +22,11 @@ namespace Labb3_CalorieTrackerMongoDB.ViewModels
         public ICommand ShowTodaysLogCommand { get; }
         public ICommand ShowFoodListCommand { get; }
         public ICommand ShowWeeklySummaryCommand { get; }
-        public MainWindowViewModel()
+        public MainWindowViewModel(DailyLogViewModel dailyLogVM, FoodViewModel foodVM, WeeklySummaryViewModel weeklySummaryVM)
         {
-            var mongoService = new MongoService();
-
-            DailyLogVM = new DailyLogViewModel(mongoService);
-            FoodVM = new FoodViewModel(DailyLogVM, mongoService);
-            WeeklySummaryVM = new WeeklySummaryViewModel(mongoService);
+            DailyLogVM = dailyLogVM;
+            FoodVM = foodVM;
+            WeeklySummaryVM = weeklySummaryVM;
 
             CurrentView = DailyLogVM;
 

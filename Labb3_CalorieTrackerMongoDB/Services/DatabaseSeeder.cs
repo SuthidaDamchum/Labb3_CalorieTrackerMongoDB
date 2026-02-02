@@ -1,24 +1,25 @@
-﻿using System.Runtime.CompilerServices;
-using System.Windows.Media.Animation;
-using Labb3_CalorieTrackerMongoDB.Models;
+﻿using Labb3_CalorieTrackerMongoDB.Models;
 using MongoDB.Driver;
 
 
 namespace Labb3_CalorieTrackerMongoDB.Services
 
 {
-    public static class DatabaseSeeder
+    public class DatabaseSeeder
     {
-        public static async Task SeedAsync(IMongoDatabase database)
+        private readonly MongoService _mongoService;
+
+        public DatabaseSeeder(MongoService mongoService) => this._mongoService = mongoService;
+        public async Task SeedAsync()
         {
-            await SeedFoodsAsync(database);
-            await SeedWeeklyGoalsAsync(database);
-            await SeedDailyLogsAsync(database);
+            await SeedFoodsAsync();
+            await SeedWeeklyGoalsAsync();
+            await SeedDailyLogsAsync();
         }
 
-        private static async Task SeedFoodsAsync(IMongoDatabase database)
+        private async Task SeedFoodsAsync()
         {
-            var foodCollection = database.GetCollection<Food>("food");
+            var foodCollection = _mongoService.Foods;
 
             if (await foodCollection.Find(_ => true).AnyAsync())
                 return;
@@ -29,15 +30,16 @@ namespace Labb3_CalorieTrackerMongoDB.Services
                 new Food { Name = "Chicken rice with salad", Unit = Unit.portion, Calories = 420, Protein = 40, Carbs = 45, Fat = 6 },
                 new Food { Name = "Apple", Unit = Unit.pcs, Calories = 95, Protein = 0, Carbs = 25, Fat = 0 },
                 new Food { Name = "Blueberry whey smoothie", Unit = Unit.portion, Calories = 215, Protein = 34, Carbs = 18, Fat = 2 },
-                new Food { Name = "Banana", Unit = Unit.pcs, Calories = 105, Protein = 1, Carbs = 27, Fat = 0 }
+                new Food { Name = "Banana", Unit = Unit.pcs, Calories = 105, Protein = 1, Carbs = 27, Fat = 0 },
+                new Food { Name = "Milk", Unit = Unit.dl, Calories = 60, Protein = 3.3, Carbs = 4.8, Fat = 3.3 }
             };
 
             await foodCollection.InsertManyAsync(foods);
         }
 
-        private static async Task SeedWeeklyGoalsAsync(IMongoDatabase database)
+        private async Task SeedWeeklyGoalsAsync()
         {
-            var collection = database.GetCollection<WeeklyGoal>("WeeklyGoals");
+            var collection = _mongoService.WeeklyGoals;
 
             if (await collection.Find(_ => true).AnyAsync())
                 return;
@@ -54,12 +56,12 @@ namespace Labb3_CalorieTrackerMongoDB.Services
             await collection.InsertOneAsync(weeklyGoal);
         }
 
-        private static async Task SeedDailyLogsAsync(IMongoDatabase database)
+        private async Task SeedDailyLogsAsync()
         {
-            // MUST match MongoService collection name
-            var dailyLogs = database.GetCollection<DailyLog>("dailylogs");
-            var foods = database.GetCollection<Food>("food");
-            var weeklyGoals = database.GetCollection<WeeklyGoal>("WeeklyGoals");
+            
+            var dailyLogs = _mongoService.DailyLogs;
+            var foods = _mongoService.Foods;
+            var weeklyGoals = _mongoService.WeeklyGoals;
 
             if (await dailyLogs.Find(_ => true).AnyAsync())
                 return;
@@ -72,10 +74,11 @@ namespace Labb3_CalorieTrackerMongoDB.Services
             var smoothie = await foods.Find(f => f.Name == "Blueberry whey smoothie").FirstOrDefaultAsync();
             var chicken = await foods.Find(f => f.Name == "Chicken rice with salad").FirstOrDefaultAsync();
             var apple = await foods.Find(f => f.Name == "Apple").FirstOrDefaultAsync();
+            var milk = await foods.Find(f => f.Name == "Milk").FirstOrDefaultAsync(); 
 
             var log = new DailyLog
             {
-                Date = DateTime.UtcNow.Date, // keep it simple; consistent UTC date
+                Date = DateTime.UtcNow.Date, 
                 GoalCalories = goal?.GoalCalories ?? 1450,
                 GoalProtein = (int)(goal?.GoalProtein ?? 105),
                 GoalCarbs = (int)(goal?.GoalCarbs ?? 130),

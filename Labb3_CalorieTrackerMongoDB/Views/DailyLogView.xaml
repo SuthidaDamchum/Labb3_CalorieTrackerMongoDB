@@ -28,6 +28,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -180,7 +181,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Weekly plan"
+                            <TextBlock Text="Daily Goals (This Week)"
                                            Grid.Column="0"
                                            FontSize="14"
                                            FontWeight="Bold"
@@ -189,9 +190,12 @@
 
                             <Button Grid.Column="1"
                                         Style="{StaticResource MatchaButtonSmallStyle}"
-                                        Content="Set weekly goal"
+                                        Content="Set daily goals for the week"
                                         Command="{Binding OpenSetNewGoalDiaLogCommand}"
-                                        Margin="10,0,0,0"/>
+                                        Margin="10,0,0,0"
+                                        MinWidth="180"
+                                        Height="30"
+                                        Padding="24,8"/>
                         </Grid>
 
                         <WrapPanel>

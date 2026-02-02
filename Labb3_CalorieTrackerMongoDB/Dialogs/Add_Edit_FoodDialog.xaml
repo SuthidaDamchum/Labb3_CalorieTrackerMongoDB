@@ -80,7 +80,7 @@
                     <StackPanel Grid.Column="0" Margin="0,0,8,0">
                         <TextBlock Text="Protein" FontWeight="SemiBold" Foreground="#2E7D32"/>
                         <TextBox Text="{Binding FoodItem.Protein,
-                        UpdateSourceTrigger=PropertyChanged,
+                        UpdateSourceTrigger=LostFocus,
                         Converter={StaticResource DoubleConverter}}"
                                  Padding="6"
                                  Background="#F1F8F1"
@@ -92,7 +92,7 @@
                     <StackPanel Grid.Column="1" Margin="0,0,8,0">
                         <TextBlock Text="Carbs" FontWeight="SemiBold" Foreground="#2E7D32"/>
                         <TextBox Text="{Binding FoodItem.Carbs,
-                        UpdateSourceTrigger=PropertyChanged,
+                        UpdateSourceTrigger=LostFocus,
                         Converter={StaticResource DoubleConverter}}"
                                  Padding="6"
                                  Background="#F1F8F1"
@@ -103,7 +103,7 @@
                     <StackPanel Grid.Column="2" Margin="0,0,8,0">
                         <TextBlock Text="Fat" FontWeight="SemiBold" Foreground="#2E7D32"/>
                         <TextBox Text="{Binding FoodItem.Fat,
-                                 UpdateSourceTrigger=PropertyChanged,
+                                 UpdateSourceTrigger=LostFocus,
                                  Converter={StaticResource DoubleConverter}}"
                                  Padding="6"
                                  Background="#F1F8F1"
