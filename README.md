@@ -3,7 +3,7 @@ This is a school project made to learn how to work with MongoDB using the MongoD
 I chose to build a Calorie Tracker because I already track my daily calories in Excel. Creating my own app felt useful and motivating, and it made the project more personal and practical.
 The application connects to a local MongoDB instance. When it runs for the first time, it creates its own database and adds demo data if the database does not already exist.
 
-## 📚 Learning Goals 
+## Learning Goals 
 
 This project focuses on learning and practicing:
 * MongoDB
@@ -13,7 +13,7 @@ This project focuses on learning and practicing:
 * CRUD operations
 * Asynchronous database communication
 
-## ⚙️ Application Features
+## Application Features
 
 The app consists of three main views:
 
@@ -35,7 +35,7 @@ The app consists of three main views:
 * See weekly food intake
 * Compare macro goals with actual results for the week
 
-## 📝 Notes
+## Notes
 This project helped me understand how a real application interacts with a NoSQL database and how to structure data for daily and weekly tracking. 
 It also gave me hands-on experience building something I can actually use in everyday life.
 
