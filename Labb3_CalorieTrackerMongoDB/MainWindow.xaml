@@ -9,14 +9,14 @@
         Width="900"
         Height="620"
         WindowStartupLocation="CenterScreen"
+        Icon="Asset/Icon.ico"
         Background="#F8EFDA">
-
         <Window.DataContext>
             <viewmodels:MainWindowViewModel/>
         </Window.DataContext>
 
         <Window.Resources>
-     
+        
         <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
         <SolidColorBrush x:Key="MatchaPrimaryDark" Color="#5F6B3A"/>
         <SolidColorBrush x:Key="VanillaBackground" Color="#F8EFDA"/>
