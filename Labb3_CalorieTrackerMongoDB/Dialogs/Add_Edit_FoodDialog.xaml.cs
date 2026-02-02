@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Labb3_CalorieTrackerMongoDB.Dialogs
 {
     /// <summary>
-    /// Interaction logic for Add_Edit_FoodDailog..xaml
+    /// Interaction logic for Add_Edit_FoodDialog..xaml
     /// </summary>
-    public partial class Add_Edit_FoodDailog : Window
+    public partial class Add_Edit_FoodDialog : Window
     {
-        public Add_Edit_FoodDailog()
+        public Add_Edit_FoodDialog()
         {
             InitializeComponent();
         }
