@@ -5,14 +5,11 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         Title="Set New Goals"
         Width="340" Height="470"
-        
         WindowStartupLocation="CenterScreen"
-       
         Background="#F8EFDA">
 
     <Window.Resources>
         
-        <!-- Theme -->
         <SolidColorBrush x:Key="MatchaPrimary" Color="#7A8450"/>
         <SolidColorBrush x:Key="MatchaPrimaryDark" Color="#5F6B3A"/>
         <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
