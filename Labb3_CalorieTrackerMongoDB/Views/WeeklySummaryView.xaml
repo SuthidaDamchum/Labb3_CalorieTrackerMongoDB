@@ -6,7 +6,7 @@
              xmlns:viewmodels="clr-namespace:Labb3_CalorieTrackerMongoDB.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="900"
-             d:DataContext="{d:DesignInstance Type=viewmodels:WeeklySummaryViewModel, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance Type=viewmodels:WeeklySummaryViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
 
@@ -17,7 +17,6 @@
         <SolidColorBrush x:Key="BorderBrushVanilla" Color="#D8D1B8"/>
         <SolidColorBrush x:Key="TextPrimary" Color="#3F4A2C"/>
         <SolidColorBrush x:Key="TextMuted" Color="#8A8F75"/>
-
       
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource CardBackground}"/>
@@ -130,7 +129,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
         <Border Margin="8" Style="{StaticResource CardStyle}" Padding="10">
             <Grid>
                 <Grid.RowDefinitions>
@@ -138,39 +136,31 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="Weekly Summary"
-                               FontSize="20"
+                               FontSize="26"
                                FontWeight="Bold"
                                Foreground="{StaticResource MatchaPrimary}"/>
                     <TextBlock Text="{Binding WeekRange}"
-                               Margin="0,4,0,0"
-                               FontSize="12"
+                               Margin="0,6,0,0"
+                               FontSize="14"
                                Foreground="{StaticResource TextMuted}"/>
                 </StackPanel>
 
-
                 <StackPanel Grid.Row="1"
                             Orientation="Horizontal"
-                            Margin="0,10,0,0">
+                            Margin="0,14,0,0">
                     <Button Content="◀ Prev"
                             Style="{StaticResource NavButtonStyle}"
-                            Height="28"
-                            MinWidth="70"
                             Command="{Binding PrevWeekCommand}"/>
 
                     <Button Content="This week"
-                            Margin="8,0,8,0"
+                            Margin="10,0,10,0"
                             Style="{StaticResource NavButtonStyle}"
-                            Height="28"
-                            MinWidth="70"
                             Command="{Binding ThisWeekCommand}"/>
 
                     <Button Content="Next ▶"
                             Style="{StaticResource NavButtonStyle}"
-                            Height="28"
-                            MinWidth="70"
                             Command="{Binding NextWeekCommand}"/>
                 </StackPanel>
             </Grid>
@@ -183,7 +173,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-    
                 <Border Grid.Row="0"
                         Margin="0,0,0,12"
                         Padding="14"
@@ -221,26 +210,23 @@
 
                 <DataGrid Grid.Row="1"
                           ItemsSource="{Binding WeekItems}"
-                          AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged">
-
+                          AutoGenerateColumns="False">  
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Day"
                                             Width="170"
                                             Binding="{Binding Date, StringFormat='{}{0:ddd, MMM d}'}"/>
-
                         <DataGridTextColumn Header="Goal" Width="80" Binding="{Binding GoalCalories}" 
-                    CellStyle="{StaticResource FocusCellStyle}"/>
+                                            CellStyle="{StaticResource FocusCellStyle}"/>
                         <DataGridTextColumn Header="Actual" Width="80" Binding="{Binding ActualCalories}" 
-                    CellStyle="{StaticResource FocusCellStyle}"/>
+                                            CellStyle="{StaticResource FocusCellStyle}"/>
                         <DataGridTextColumn Header="Diff" Width="80" Binding="{Binding CaloriesDiffText}" 
-                    CellStyle="{StaticResource FocusCellStyle}"/>
-
+                                            CellStyle="{StaticResource FocusCellStyle}"/>
                         <DataGridTextColumn Header="Protein (A/G)" Width="120" Binding="{Binding ProteinText}" 
-                    CellStyle="{StaticResource FocusCellStyle}"/>
+                                            CellStyle="{StaticResource FocusCellStyle}"/>
                         <DataGridTextColumn Header="Carbs (A/G)" Width="120" Binding="{Binding CarbsText}" 
-                    CellStyle="{StaticResource FocusCellStyle}"/>
+                                            CellStyle="{StaticResource FocusCellStyle}"/>
                         <DataGridTextColumn Header="Fat (A/G)" Width="120" Binding="{Binding FatText}" 
-                    CellStyle="{StaticResource FocusCellStyle}"/>
+                                            CellStyle="{StaticResource FocusCellStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

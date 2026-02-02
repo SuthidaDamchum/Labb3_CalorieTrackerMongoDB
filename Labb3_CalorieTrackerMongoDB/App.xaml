@@ -8,9 +8,6 @@
 
     <Application.Resources>
         
-
-
-
         <DataTemplate DataType="{x:Type viewmodels:DailyLogViewModel}">
             <views:DailyLogView/>
         </DataTemplate>
